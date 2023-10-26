@@ -38,11 +38,6 @@ public class UserCommands extends AbstractShellComponent {
         dataSource.setServerNames(new String[]{
                 Config.hostname
         });
-//        DataSourceBuilder<?> dataSourceBuilder = DataSourceBuilder.create();
-//        dataSourceBuilder.url(config.getURL());
-//        dataSourceBuilder.driverClassName("org.postgresql.ds.PGConnectionPoolDataSource");
-//        dataSourceBuilder.username(username);
-//        dataSourceBuilder.password(password);
         return dataSource;
     }
 
@@ -105,8 +100,8 @@ public class UserCommands extends AbstractShellComponent {
         setJdbcTemplate(dataSource(username.getResultValue(), password.getResultValue()));
     }
     @ShellMethod(key = "getTables", value = "Logins the User", group = "Components")
-    public String getTables() {
-        return jdbcTemplate.queryForObject("SELECT title FROM game WHERE gameid = 0;", String.class);
+    public String getGame(int value) {
+        return jdbcTemplate.queryForObject("SELECT title FROM game WHERE gameid = "+ value + ";", String.class);
     }
 
 }
