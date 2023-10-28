@@ -41,39 +41,30 @@ public class SetupDatabase extends AbstractShellComponent implements Quit.Comman
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    private @NotNull StringInput setupContext(boolean mask, String name, String defaultValue) {
-        StringInput component = new StringInput(getTerminal(), name, defaultValue);
-        component.setResourceLoader(getResourceLoader());
-        component.setTemplateExecutor(getTemplateExecutor());
-        if(mask) {
-            component.setMaskCharacter('*');
-        }
-        return component;
-    }
-
     @Command(command = "quit", alias = "exit", description = "Exit the shell", interactionMode = INTERACTIVE, group = "Built-In Commands")
     public void quit() throws SQLException {
         logout();
         throw new ExitRequest();
     }
 
-    @Command(command = "logout", description = "Logs out of the database")
+    @Command(command = "logout database", description = "Logs out of the database")
     void logout() throws SQLException {
         if(jdbcTemplate != null){
             Objects.requireNonNull(jdbcTemplate.getDataSource()).getConnection().close();
             dataSource.getConnection().close();
             session.disconnect();
+            getTerminal().writer().println("Successfully disconnected!");
         } else {
             getTerminal().writer().println("Not Logged in");
         }
     }
-    @Command(command = "login", description = "Logs into the database")
+    @Command(command = "login database", description = "Logs into the database")
     private void login() throws JSchException {
         StringInput.StringInputContext username =
-                setupContext(false, "Enter Username: ", "username")
+                Helper.setupContext(false, "Enter Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor())
                         .run(StringInput.StringInputContext.empty());
         StringInput.StringInputContext password =
-                setupContext(true, "Enter Password: ", "password")
+                Helper.setupContext(true, "Enter Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor())
                         .run(StringInput.StringInputContext.empty());
         var jsch = new JSch();
         session = jsch.getSession(username.getResultValue(), Config.HOST);
