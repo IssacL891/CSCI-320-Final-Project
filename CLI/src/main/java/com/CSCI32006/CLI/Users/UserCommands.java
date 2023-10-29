@@ -1,4 +1,4 @@
-package com.CSCI32006.CLI.UserCommands.Users;
+package com.CSCI32006.CLI.Users;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
 import lombok.Getter;

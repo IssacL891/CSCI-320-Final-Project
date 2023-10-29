@@ -1,4 +1,4 @@
-package com.CSCI32006.CLI.UserCommands.Collections;
+package com.CSCI32006.CLI.Collections;
 
 import org.springframework.jdbc.core.RowMapper;
 
