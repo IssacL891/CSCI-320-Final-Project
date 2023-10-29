@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @Command(group = "Collection Commands", interactionMode = InteractionMode.INTERACTIVE)
 public class CollectionCommands extends AbstractShellComponent {
 
-    private int getCollection() {
+    private int getCollection(String title) {
         var id = UserCommands.getUser().getUserId();
         var list = SetupDatabase.getJdbcTemplate().query(
                 "SELECT * FROM collection WHERE userid = ?;", new CollectionRowMapper(), id
@@ -27,7 +27,7 @@ public class CollectionCommands extends AbstractShellComponent {
         var t = list.stream().map((collection -> SelectorItem.of(collection.getCollectionName(), String.valueOf(collection.getCollectionId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-                t, "Delete a collection", null);
+                t, title, null);
         component.setResourceLoader(getResourceLoader());
         component.setTemplateExecutor(getTemplateExecutor());
         SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
@@ -50,18 +50,21 @@ public class CollectionCommands extends AbstractShellComponent {
 
     @Command(command = "collection delete", description = "deletes a collection interactively")
     private void deleteCollection() {
-        var collectionId = getCollection();
+        var collectionId = getCollection("Select collection to delete");
         if(collectionId == -1) return;
         var name = getName(collectionId);
         SetupDatabase.getJdbcTemplate().update(
                 "DELETE FROM collection WHERE collectionid = ?;", collectionId
         );
         getTerminal().writer().println("Collection " + name + " was deleted!");
+        SetupDatabase.getJdbcTemplate().update(
+                "DELETE FROM game_in_collection WHERE collectionid = ?;", collectionId
+        );
     }
 
     @Command(command = "collection rename", description = "renames a collection interactively")
     private void renameCollection() {
-        var collectionId = getCollection();
+        var collectionId = getCollection("Select collection to rename");
         if(collectionId == -1) return;
         getTerminal().writer().println("Collection " + getName(collectionId) + " selected: ");
         var name = getName(collectionId);
