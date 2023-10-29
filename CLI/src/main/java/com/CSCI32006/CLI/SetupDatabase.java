@@ -60,15 +60,13 @@ public class SetupDatabase extends AbstractShellComponent implements Quit.Comman
     }
     @Command(command = "login database", description = "Logs into the database")
     private void login() throws JSchException {
-        StringInput.StringInputContext username =
-                Helper.setupContext(false, "Enter Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor())
-                        .run(StringInput.StringInputContext.empty());
-        StringInput.StringInputContext password =
-                Helper.setupContext(true, "Enter Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor())
-                        .run(StringInput.StringInputContext.empty());
+        var username =
+                Helper.getContextValue(false, "Enter Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor());
+        var password =
+                Helper.getContextValue(true, "Enter Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor());
         var jsch = new JSch();
-        session = jsch.getSession(username.getResultValue(), Config.HOST);
-        session.setPassword(password.getResultValue());
+        session = jsch.getSession(username, Config.HOST);
+        session.setPassword(password);
         jsch.getHostKeyRepository().add(new HostKey(
                 Config.HOST,
                 3,
@@ -76,6 +74,6 @@ public class SetupDatabase extends AbstractShellComponent implements Quit.Comman
         ), null);
         session.setPortForwardingL(Config.LOCAL_PORT, Config.HOSTNAME, Config.HOST_PORT);
         session.connect();
-        setDatabaseConn(username.getResultValue(), password.getResultValue());
+        setDatabaseConn(username, password);
     }
 }

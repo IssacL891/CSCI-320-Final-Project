@@ -1,10 +1,10 @@
-package com.CSCI32006.CLI.UserCommands;
+package com.CSCI32006.CLI.UserCommands.Users;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
+import lombok.Getter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.shell.command.annotation.Command;
-import org.springframework.shell.component.StringInput;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 import java.sql.Date;
@@ -12,7 +12,8 @@ import java.sql.Date;
 @Command(group = "User Commands", interactionMode = InteractionMode.INTERACTIVE)
 public class UserCommands extends AbstractShellComponent {
 
-    private User user;
+    @Getter
+    private static User user;
     private boolean checkUserExists(String username) {
         try {
             SetupDatabase.getJdbcTemplate().queryForObject(
@@ -45,10 +46,10 @@ public class UserCommands extends AbstractShellComponent {
     private void setupNewUser(String username) {
         var encoder = new BCryptPasswordEncoder(16);
         getTerminal().writer().println("Creating a new User!");
-        var password = Helper.setupContext(true, "Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor()).run(StringInput.StringInputContext.empty()).getResultValue();
-        var email = Helper.setupContext(false, "Email: ", "abc123@example.com", getTerminal(), getResourceLoader(), getTemplateExecutor()).run(StringInput.StringInputContext.empty()).getResultValue();
-        var firstName = Helper.setupContext(false, "firstName: ", "firstname", getTerminal(), getResourceLoader(), getTemplateExecutor()).run(StringInput.StringInputContext.empty()).getResultValue();
-        var lastName = Helper.setupContext(false, "lastName: ", "lastname", getTerminal(), getResourceLoader(), getTemplateExecutor()).run(StringInput.StringInputContext.empty()).getResultValue();
+        var password = Helper.getContextValue(true, "Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor());
+        var email = Helper.getContextValue(false, "Email: ", "abc123@example.com", getTerminal(), getResourceLoader(), getTemplateExecutor());
+        var firstName = Helper.getContextValue(false, "firstName: ", "firstname", getTerminal(), getResourceLoader(), getTemplateExecutor());
+        var lastName = Helper.getContextValue(false, "lastName: ", "lastname", getTerminal(), getResourceLoader(), getTemplateExecutor());
         var dateOfCreation = new Date(System.currentTimeMillis());
         SetupDatabase.getJdbcTemplate().update(
                 "INSERT INTO users (userid, username, password, email, firstname, lastname, dateofcreation, lastaccessdate, followers)" +
@@ -66,10 +67,10 @@ public class UserCommands extends AbstractShellComponent {
     @Command(command = "login user", description = "login to app")
     private void login() {
         getTerminal().writer().println("Logging in to the application");
-        var username = Helper.setupContext(false, "Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor()).run(StringInput.StringInputContext.empty()).getResultValue();
+        var username = Helper.getContextValue(false, "Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor());
         if(checkUserExists(username)) {
             getTerminal().writer().println("User Exists!");
-            var password = Helper.setupContext(true, "Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor()).run(StringInput.StringInputContext.empty()).getResultValue();
+            var password = Helper.getContextValue(true, "Password: ", "password", getTerminal(), getResourceLoader(), getTemplateExecutor());
             setUser(username, password);
         } else {
             setupNewUser(username);

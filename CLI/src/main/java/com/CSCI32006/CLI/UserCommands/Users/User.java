@@ -1,4 +1,4 @@
-package com.CSCI32006.CLI.UserCommands;
+package com.CSCI32006.CLI.UserCommands.Users;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
