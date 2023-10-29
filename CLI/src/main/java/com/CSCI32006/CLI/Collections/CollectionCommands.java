@@ -131,6 +131,7 @@ public class CollectionCommands extends AbstractShellComponent {
     @Command(command = "collection delete game", description = "delete a game from a collection through an interactive menu")
     private void deleteGameFromCollection() {
         //TODO Check if game exists
+        //TODO #12
         var collectionId = getCollection("Select collection to add to");
         if(collectionId == -1) return;
         var gameId = getGameFromCollection("Select Game", collectionId);
