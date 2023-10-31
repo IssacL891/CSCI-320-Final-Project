@@ -1,13 +1,19 @@
 package com.CSCI32006.CLI.Users;
+
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
 import lombok.Getter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.component.SingleItemSelector;
+import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
+
 import java.sql.Date;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Command(group = "User Commands", interactionMode = InteractionMode.INTERACTIVE)
 public class UserCommands extends AbstractShellComponent {
@@ -33,7 +39,7 @@ public class UserCommands extends AbstractShellComponent {
     private void setUser(String username, String password) {
         var encoder = new BCryptPasswordEncoder(16);
         if(encoder.matches(password, getPassword(username))) {
-            user = SetupDatabase.getJdbcTemplate().queryForObject(
+            var user = SetupDatabase.getJdbcTemplate().queryForObject(
                     "SELECT * FROM users where username = ?;", new UserRowMapper(), username
             );
             SetupDatabase.getJdbcTemplate().update(
@@ -59,6 +65,49 @@ public class UserCommands extends AbstractShellComponent {
         setUser(username, password);
     }
 
+    @Command(command = "follow user", description = "follows a user")
+    private void follow() {
+        var list = SetupDatabase.getJdbcTemplate().query(
+                "SELECT * FROM users WHERE NOT userid = ? AND userid NOT in (SELECT useridown FROM followers WHERE useridfollow = ?);", new UserRowMapper(), UserCommands.getUser().getUserId(), UserCommands.getUser().getUserId()
+        );
+        var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
+        t.add(SelectorItem.of("cancel", "-1"));
+        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                t, "Select a game", null);
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                .run(SingleItemSelector.SingleItemSelectorContext.empty());
+        var x = Integer.parseInt(context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+        if(x == -1) return;
+        SetupDatabase.getJdbcTemplate().update(
+                "INSERT INTO followers (useridown, useridfollow) values (?, ?)", x, UserCommands.getUser().getUserId());
+        var u = SetupDatabase.getJdbcTemplate().queryForObject(
+                "SELECT username FROM users WHERE userid = ?", String.class, x);
+        getTerminal().writer().println("Sucessfully followed " + u);
+    }
+
+    @Command(command = "unfollow user", description = "unfollows a user")
+    private void unfollow() {
+        var list = SetupDatabase.getJdbcTemplate().query(
+                "SELECT * FROM followers WHERE useridfollow = ?;", new UserRowMapper(), UserCommands.getUser().getUserId()
+        );
+        var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
+        t.add(SelectorItem.of("cancel", "-1"));
+        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                t, "Select a game", null);
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                .run(SingleItemSelector.SingleItemSelectorContext.empty());
+        var x = Integer.parseInt(context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+        if(x == -1) return;
+        SetupDatabase.getJdbcTemplate().update(
+                "DELETE FROM followers WHERE useridfollow = ?", x);
+        var u = SetupDatabase.getJdbcTemplate().queryForObject(
+                "SELECT username FROM users WHERE userid = ?", String.class, x);
+        getTerminal().writer().println("Sucessfully unfollowed " + u);
+    }
     @Command(command = "logout user", description = "logout to app")
     private void logout() {
         user = null;
