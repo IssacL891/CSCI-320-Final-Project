@@ -4,6 +4,7 @@ import com.CSCI32006.CLI.Games.GameRowMapper;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
 import com.CSCI32006.CLI.Users.UserCommands;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
@@ -123,6 +124,17 @@ public class CollectionCommands extends AbstractShellComponent {
         if(collectionId == -1) return;
         var gameId = getGame();
         if(gameId == -1) return;
+        try {
+            SetupDatabase.getJdbcTemplate().queryForObject(
+                    "SELECT gameid FROM game_on_platforms " +
+                            "JOIN user_owns_platforms uop " +
+                            "on game_on_platforms.platformid = uop.platformid " +
+                            "WHERE gameid = ? AND userid = ?", Integer.class, gameId, UserCommands.getUser().getUserId()
+            );
+        } catch (EmptyResultDataAccessException e) {
+            getTerminal().writer().println("You do not own the platform the game is on.");
+        }
+
         SetupDatabase.getJdbcTemplate().update(
                 "INSERT INTO game_in_collection (gameid, collectionid, starrating) VALUES(?, ?, ?)", gameId, collectionId, -1
         );
