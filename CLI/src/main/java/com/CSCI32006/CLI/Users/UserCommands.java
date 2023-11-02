@@ -39,7 +39,7 @@ public class UserCommands extends AbstractShellComponent {
     private void setUser(String username, String password) {
         var encoder = new BCryptPasswordEncoder(16);
         if(encoder.matches(password, getPassword(username))) {
-            var user = SetupDatabase.getJdbcTemplate().queryForObject(
+            user = SetupDatabase.getJdbcTemplate().queryForObject(
                     "SELECT * FROM users where username = ?;", new UserRowMapper(), username
             );
             SetupDatabase.getJdbcTemplate().update(
