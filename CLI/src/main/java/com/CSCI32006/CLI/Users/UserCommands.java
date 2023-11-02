@@ -43,7 +43,7 @@ public class UserCommands extends AbstractShellComponent {
                     "SELECT * FROM users where username = ?;", new UserRowMapper(), username
             );
             SetupDatabase.getJdbcTemplate().update(
-                    "UPDATE users SET lastaccessdate = ? where username = ? AND password = ?;", new Date(System.currentTimeMillis()), username, password);
+                    "UPDATE users SET lastaccessdate = current_date where username = ?;", username);
             getTerminal().writer().println("Successfully logged in!");
         } else {
             getTerminal().writer().println("Wrong password. Login failed.");
