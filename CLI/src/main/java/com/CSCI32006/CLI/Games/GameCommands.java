@@ -99,6 +99,35 @@ public class GameCommands extends AbstractShellComponent {
                         .run(SingleItemSelector.SingleItemSelectorContext.empty());
                 var z = Integer.parseInt(context2.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
             }
+            //TODO add release data
+            case developer -> {
+                var developers = SetupDatabase.getJdbcTemplate().queryForList(
+                        "SELECT DISTINCT(developername) AS c FROM game ORDER BY c;", String.class
+                );
+                var t = developers.stream().map((developer -> SelectorItem.of(developer, developer))).collect(Collectors.toList());
+                t.add(SelectorItem.of("cancel", "cancel"));
+                SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                        t, "Select a section", null);
+                component.setResourceLoader(getResourceLoader());
+                component.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var x = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
+                if("cancel".equals(x)) return;
+
+                var list = SetupDatabase.getJdbcTemplate().query(
+                        "SELECT * FROM game WHERE developername = ?;", new GameRowMapper(), x
+                );
+                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                w.add(SelectorItem.of("cancel", "-1"));
+                SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
+                        w, "Select a game", null);
+                component2.setResourceLoader(getResourceLoader());
+                component2.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context2 = component2
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var z = Integer.parseInt(context2.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+            }
         }
 
     }
