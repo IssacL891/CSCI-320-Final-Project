@@ -52,8 +52,8 @@ public class UserCommands extends AbstractShellComponent {
         var lastName = Helper.getContextValue(false, "lastName: ", "lastname", getTerminal(), getResourceLoader(), getTemplateExecutor());
         var dateOfCreation = new Date(System.currentTimeMillis());
         SetupDatabase.getJdbcTemplate().update(
-                "INSERT INTO users (userid, username, password, email, firstname, lastname, dateofcreation, lastaccessdate, followers)" +
-                        "VALUES ((SELECT MAX(userid) FROM users) + 1, ?, ?, ?, ?, ?, ?, ?, ?)", username, encoder.encode(password), email, firstName, lastName, dateOfCreation, dateOfCreation, 0
+                "INSERT INTO users (userid, username, password, email, firstname, lastname, dateofcreation, lastaccessdate)" +
+                        "VALUES ((SELECT MAX(userid) FROM users) + 1, ?, ?, ?, ?, ?, ?, ?)", username, encoder.encode(password), email, firstName, lastName, dateOfCreation, dateOfCreation
         );
         getTerminal().writer().println("User setup successful!");
         setUser(username, password);

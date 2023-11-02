@@ -96,12 +96,12 @@ public class CollectionCommands extends AbstractShellComponent {
         if(collectionId == -1) return;
         var name = getCollectionName(collectionId);
         SetupDatabase.getJdbcTemplate().update(
+                "DELETE FROM game_in_collection WHERE collectionid = ?;", collectionId
+        );
+        SetupDatabase.getJdbcTemplate().update(
                 "DELETE FROM collection WHERE collectionid = ?;", collectionId
         );
         getTerminal().writer().println("Collection " + name + " was deleted!");
-        SetupDatabase.getJdbcTemplate().update(
-                "DELETE FROM game_in_collection WHERE collectionid = ?;", collectionId
-        );
     }
 
     @Command(command = "collection rename", description = "renames a collection interactively")

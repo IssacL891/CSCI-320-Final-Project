@@ -16,8 +16,7 @@ public class UserRowMapper implements RowMapper<User> {
                 rs.getString("firstname"),
                 rs.getString("lastname"),
                 rs.getDate("dateofcreation"),
-                rs.getDate("lastaccessdate"),
-                rs.getInt("followers")
+                rs.getDate("lastaccessdate")
                 );
     }
 }
