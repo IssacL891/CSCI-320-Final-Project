@@ -45,7 +45,7 @@ public class GameCommands extends AbstractShellComponent {
         switch (terms) {
             case name -> {
                 var alphabet = SetupDatabase.getJdbcTemplate().queryForList(
-                        "SELECT DISTINCT(UPPER(LEFT(title, 1))) FROM game ORDER BY LEFT(title, 1);", String.class
+                        "SELECT DISTINCT(UPPER(LEFT(title, 1))) AS c FROM game ORDER BY c;", String.class
                 );
                 var t = alphabet.stream().map((character -> SelectorItem.of(character, character))).collect(Collectors.toList());
                 t.add(SelectorItem.of("cancel", "cancel"));
