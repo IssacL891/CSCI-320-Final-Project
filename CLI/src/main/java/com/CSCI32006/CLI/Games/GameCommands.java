@@ -107,7 +107,7 @@ public class GameCommands extends AbstractShellComponent {
                 var t = developers.stream().map((developer -> SelectorItem.of(developer, developer))).collect(Collectors.toList());
                 t.add(SelectorItem.of("cancel", "cancel"));
                 SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-                        t, "Select a section", null);
+                        t, "Select a developer", null);
                 component.setResourceLoader(getResourceLoader());
                 component.setTemplateExecutor(getTemplateExecutor());
                 SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
@@ -117,6 +117,34 @@ public class GameCommands extends AbstractShellComponent {
 
                 var list = SetupDatabase.getJdbcTemplate().query(
                         "SELECT * FROM game WHERE developername = ?;", new GameRowMapper(), x
+                );
+                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                w.add(SelectorItem.of("cancel", "-1"));
+                SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
+                        w, "Select a game", null);
+                component2.setResourceLoader(getResourceLoader());
+                component2.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context2 = component2
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var z = Integer.parseInt(context2.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+            }
+            case genre -> {
+                var genres = SetupDatabase.getJdbcTemplate().queryForList(
+                        "SELECT DISTINCT(genretype) AS c FROM genre ORDER BY c;", String.class
+                );
+                var t = genres.stream().map((genre -> SelectorItem.of(genre, genre))).collect(Collectors.toList());
+                t.add(SelectorItem.of("cancel", "cancel"));
+                SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                        t, "Select a genre", null);
+                component.setResourceLoader(getResourceLoader());
+                component.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var x = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
+                if("cancel".equals(x)) return;
+
+                var list = SetupDatabase.getJdbcTemplate().query(
+                        "SELECT * FROM game JOIN game_belongs_to_genre gbtg on game.gameid = gbtg.gameid JOIN genre g on gbtg.genreid = g.genreid WHERE genretype = ?;", new GameRowMapper(), x
                 );
                 var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                 w.add(SelectorItem.of("cancel", "-1"));

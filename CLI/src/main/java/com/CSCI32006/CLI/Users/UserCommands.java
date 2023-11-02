@@ -90,7 +90,7 @@ public class UserCommands extends AbstractShellComponent {
     @Command(command = "unfollow user", description = "unfollows a user")
     private void unfollow() {
         var list = SetupDatabase.getJdbcTemplate().query(
-                "SELECT * FROM users JOIN followers f on users.userid = f.useridown WHERE useridfollow = ?", new UserRowMapper(), 151
+                "SELECT * FROM users JOIN followers f on users.userid = f.useridown WHERE useridfollow = ?", new UserRowMapper(), UserCommands.getUser().getUserId()
         );
         var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
