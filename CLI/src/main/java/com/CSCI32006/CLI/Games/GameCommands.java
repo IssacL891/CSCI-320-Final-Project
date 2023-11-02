@@ -1,5 +1,6 @@
 package com.CSCI32006.CLI.Games;
 
+import com.CSCI32006.CLI.Platforms.PlatformRowMapper;
 import com.CSCI32006.CLI.SetupDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.command.annotation.Command;
@@ -44,7 +45,7 @@ public class GameCommands extends AbstractShellComponent {
         switch (terms) {
             case name -> {
                 var alphabet = SetupDatabase.getJdbcTemplate().queryForList(
-                        "SELECT DISTINCT(LEFT(title, 1)) FROM game ORDER BY LEFT(title, 1);", String.class
+                        "SELECT DISTINCT(UPPER(LEFT(title, 1))) FROM game ORDER BY LEFT(title, 1);", String.class
                 );
                 var t = alphabet.stream().map((character -> SelectorItem.of(character, character))).collect(Collectors.toList());
                 t.add(SelectorItem.of("cancel", "cancel"));
@@ -69,7 +70,34 @@ public class GameCommands extends AbstractShellComponent {
                 SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context2 = component2
                         .run(SingleItemSelector.SingleItemSelectorContext.empty());
                 var z = Integer.parseInt(context2.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
-                if(z == -1) return;
+            }
+            case platform -> {
+                var platforms = SetupDatabase.getJdbcTemplate().query(
+                        "SELECT * FROM platform;", new PlatformRowMapper()
+                );
+                var t = platforms.stream().map((platform -> SelectorItem.of(platform.getName(), String.valueOf(platform.getPlatformId())))).collect(Collectors.toList());
+                t.add(SelectorItem.of("cancel", "-1"));
+                SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                        t, "Select a platform", null);
+                component.setResourceLoader(getResourceLoader());
+                component.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var x = Integer.parseInt(context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+                if(x == -1) return;
+
+                var list = SetupDatabase.getJdbcTemplate().query(
+                        "SELECT * FROM game JOIN game_on_platforms gop on game.gameid = gop.gameid WHERE platformid = ?;", new GameRowMapper(), x
+                );
+                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                w.add(SelectorItem.of("cancel", "-1"));
+                SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
+                        w, "Select a game", null);
+                component2.setResourceLoader(getResourceLoader());
+                component2.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context2 = component2
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var z = Integer.parseInt(context2.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
             }
         }
 
