@@ -19,10 +19,12 @@ import org.springframework.shell.geom.HorizontalAlign;
 import org.springframework.shell.geom.VerticalAlign;
 import org.springframework.shell.standard.AbstractShellComponent;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 enum searchTerms {
     name,
@@ -39,17 +41,37 @@ public class GameCommands extends AbstractShellComponent {
     private void gameSearch(searchTerms terms) {
         //TODO Check if list is > 0
         //TODO move to Helper
-        var list = SetupDatabase.getJdbcTemplate().query(
-                "SELECT * FROM game ORDER BY ?;", new GameRowMapper(), terms.name()
-        );
-        var t = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
-        t.add(SelectorItem.of("cancel", "-1"));
-        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-                t, "Select a game", null);
-        component.setResourceLoader(getResourceLoader());
-        component.setTemplateExecutor(getTemplateExecutor());
-        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
-                .run(SingleItemSelector.SingleItemSelectorContext.empty());
-        var x = Integer.parseInt(context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+        switch (terms) {
+            case name -> {
+                var alphabet = SetupDatabase.getJdbcTemplate().queryForList(
+                        "SELECT DISTINCT(LEFT(title, 1)) FROM game ORDER BY LEFT(title, 1);", String.class
+                );
+                var t = alphabet.stream().map((character -> SelectorItem.of(character, character))).collect(Collectors.toList());
+                t.add(SelectorItem.of("cancel", "cancel"));
+                SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                        t, "Select a section", null);
+                component.setResourceLoader(getResourceLoader());
+                component.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var x = context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get();
+                if("cancel".equals(x)) return;
+
+                var list = SetupDatabase.getJdbcTemplate().query(
+                        "SELECT * FROM game WHERE LOWER(LEFT(title, 1)) = LOWER(?);", new GameRowMapper(), x
+                );
+                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                w.add(SelectorItem.of("cancel", "-1"));
+                SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
+                        w, "Select a game", null);
+                component2.setResourceLoader(getResourceLoader());
+                component2.setTemplateExecutor(getTemplateExecutor());
+                SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context2 = component2
+                        .run(SingleItemSelector.SingleItemSelectorContext.empty());
+                var z = Integer.parseInt(context2.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+                if(z == -1) return;
+            }
+        }
+
     }
 }
