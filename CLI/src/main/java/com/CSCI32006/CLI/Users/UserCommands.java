@@ -73,7 +73,7 @@ public class UserCommands extends AbstractShellComponent {
         var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-                t, "Select a game", null);
+                t, "Select a follower to follow", null);
         component.setResourceLoader(getResourceLoader());
         component.setTemplateExecutor(getTemplateExecutor());
         SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
@@ -90,12 +90,12 @@ public class UserCommands extends AbstractShellComponent {
     @Command(command = "unfollow user", description = "unfollows a user")
     private void unfollow() {
         var list = SetupDatabase.getJdbcTemplate().query(
-                "SELECT * FROM followers WHERE useridfollow = ?;", new UserRowMapper(), UserCommands.getUser().getUserId()
+                "SELECT * FROM users JOIN followers f on users.userid = f.useridown WHERE useridfollow = ?", new UserRowMapper(), 151
         );
         var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
-                t, "Select a game", null);
+                t, "Select a follower to unfollow", null);
         component.setResourceLoader(getResourceLoader());
         component.setTemplateExecutor(getTemplateExecutor());
         SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
@@ -103,7 +103,7 @@ public class UserCommands extends AbstractShellComponent {
         var x = Integer.parseInt(context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
         if(x == -1) return;
         SetupDatabase.getJdbcTemplate().update(
-                "DELETE FROM followers WHERE useridfollow = ?", x);
+                "DELETE FROM followers WHERE useridown = ? AND useridfollow = ?", x, UserCommands.getUser().getUserId());
         var u = SetupDatabase.getJdbcTemplate().queryForObject(
                 "SELECT username FROM users WHERE userid = ?", String.class, x);
         getTerminal().writer().println("Sucessfully unfollowed " + u);
