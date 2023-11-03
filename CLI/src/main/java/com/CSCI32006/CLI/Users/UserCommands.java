@@ -108,6 +108,7 @@ public class UserCommands extends AbstractShellComponent {
                 "SELECT username FROM users WHERE userid = ?", String.class, x);
         getTerminal().writer().println("Sucessfully unfollowed " + u);
     }
+
     @Command(command = "logout user", description = "logout to app")
     private void logout() {
         user = null;

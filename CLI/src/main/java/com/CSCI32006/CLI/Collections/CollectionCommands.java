@@ -160,4 +160,16 @@ public class CollectionCommands extends AbstractShellComponent {
         if(collectionId == -1) return;
         getGameFromCollection("List of games in collection " + getCollectionName(collectionId), collectionId);
     }
+
+    @Command(command = "game rate", description = "Rates a game")
+    private void gameRate() {
+        var collectionId = getCollection("List of collections");
+        if(collectionId == -1) return;
+        var t = getGameFromCollection("List of games in collection " + getCollectionName(collectionId), collectionId);
+        if(t == -1) return;
+        var x = Double.valueOf(Helper.getContextValue(false, "What do you rate this game?", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
+        SetupDatabase.getJdbcTemplate().update(
+                "UPDATE game_in_collection SET starrating = ? WHERE collectionid = ? AND gameid = ?", x, collectionId, t);
+        getTerminal().writer().println("Successfully updated " + getGameName(t) + "'s rating to " + x);
+    }
 }

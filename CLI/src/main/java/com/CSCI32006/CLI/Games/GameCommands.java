@@ -1,8 +1,10 @@
 package com.CSCI32006.CLI.Games;
 
+import com.CSCI32006.CLI.Collections.CollectionRowMapper;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.Platforms.PlatformRowMapper;
 import com.CSCI32006.CLI.SetupDatabase;
+import com.CSCI32006.CLI.Users.UserCommands;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
