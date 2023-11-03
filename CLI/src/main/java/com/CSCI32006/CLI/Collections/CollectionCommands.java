@@ -26,15 +26,17 @@ public class CollectionCommands extends AbstractShellComponent {
         //TODO generalize for all tables
         var id = UserCommands.getUser().getUserId();
         var list = SetupDatabase.getJdbcTemplate().query(
-                "SELECT collection.userid, collection.collectionid, collectionname,\n" +
-                        "COUNT(gic.gameid) AS countOfGames, coalesce(SUM(hour) + SUM(minutes) / 60, 0) AS hours,\n" +
+                "SELECT collection.collectionid, collection.userid,\n" +
+                        "                collectionname,\n" +
+                        "                COUNT(gic.gameid) AS countOfGames,\n" +
+                        "                coalesce(SUM(hour) + SUM(minutes) / 60, 0) AS hours,\n" +
                         "coalesce(SUM(minutes) % 60, 0) AS minutes\n" +
                         "FROM collection\n" +
                         "LEFT JOIN game_in_collection gic\n" +
                         "on collection.collectionid = gic.collectionid\n" +
-                        "LEFT JOIN user_played_game upg on collection.userid = upg.userid\n" +
+                        "LEFT JOIN user_played_game upg on gic.gameid = upg.gameid AND upg.userid = collection.userid\n" +
                         "WHERE collection.userid = ?\n" +
-                        "group by collection.userid, collection.collectionid\n", new CollectionDisplayRowMapper(), id
+                        "group by collection.collectionid, collection.userid, collectionname;\n", new CollectionDisplayRowMapper(), id
         );
         var t = list.stream().map((collectionDisplay -> SelectorItem.of(collectionDisplay.toString(), String.valueOf(collectionDisplay.getCollectionId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
@@ -205,9 +207,9 @@ public class CollectionCommands extends AbstractShellComponent {
         } else {
             var collectionId = getCollection("List of collections");
             if(collectionId == -1) return;
-            var t = getGameFromCollection("List of games in collection " + getCollectionName(collectionId), collectionId);
-            if(t == -1) return;
-            name = getGameName(t);
+            id = getGameFromCollection("List of games in collection " + getCollectionName(collectionId), collectionId);
+            if(id == -1) return;
+            name = getGameName(id);
         }
         var date = java.sql.Date.valueOf(Helper.getContextValue(false, "When did you play the game? ", "YYYY-MM-dd", getTerminal(), getResourceLoader(), getTemplateExecutor()));
         var time = Helper.getContextValue(false, "How long did you play " + name + "?", "HH:MM", getTerminal(), getResourceLoader(), getTemplateExecutor());
