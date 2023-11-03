@@ -213,8 +213,8 @@ public class CollectionCommands extends AbstractShellComponent {
         var time = Helper.getContextValue(false, "How long did you play " + name + "?", "HH:MM", getTerminal(), getResourceLoader(), getTemplateExecutor());
         var t = time.split(":");
         SetupDatabase.getJdbcTemplate().update(
-                "INSERT INTO user_played_game (date, userid, gameid, hour, minutes) VALUES(date = ?, userid = ?, gameid = ?, hour = ?, minutes = ?);"
-                    , date, UserCommands.getUser().getUserId(), id, t[0], t[1]);
+                "INSERT INTO user_played_game (date, userid, gameid, hour, minutes) VALUES(?, ?, ?, ?, ?);"
+                    , date, UserCommands.getUser().getUserId(), id, Integer.parseInt(t[0]), Integer.parseInt(t[1]));
         getTerminal().writer().println("Successfully added playtime!");
     }
 }
