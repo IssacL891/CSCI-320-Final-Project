@@ -2,6 +2,7 @@ package com.CSCI32006.CLI.Collections;
 
 import com.CSCI32006.CLI.Games.GameRowMapper;
 import com.CSCI32006.CLI.Helper;
+import com.CSCI32006.CLI.Platforms.PlatformRowMapper;
 import com.CSCI32006.CLI.SetupDatabase;
 import com.CSCI32006.CLI.Users.UserCommands;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -85,6 +86,13 @@ public class CollectionCommands extends AbstractShellComponent {
         //TODO give response if collection doesn't exist
         return SetupDatabase.getJdbcTemplate().queryForObject(
                 "SELECT collectionname FROM collection WHERE collectionid = ?;", String.class, collectionId
+        );
+    }
+    private String getPlatformName(int platformId) {
+        //TODO move to Helper
+        //TODO give response if collection doesn't exist
+        return SetupDatabase.getJdbcTemplate().queryForObject(
+                "SELECT name FROM platform WHERE platformid = ?;", String.class, platformId
         );
     }
     private String getGameName(int gameId) {
@@ -218,5 +226,25 @@ public class CollectionCommands extends AbstractShellComponent {
                 "INSERT INTO user_played_game (date, userid, gameid, hour, minutes) VALUES(?, ?, ?, ?, ?);"
                     , date, UserCommands.getUser().getUserId(), id, Integer.parseInt(t[0]), Integer.parseInt(t[1]));
         getTerminal().writer().println("Successfully added playtime!");
+    }
+
+    @Command(command = "get platform", description = "Buy a platform.")
+    private void buyPlatform() {
+        var list = SetupDatabase.getJdbcTemplate().query(
+                "SELECT * FROM platform;", new PlatformRowMapper()
+        );
+        var t = list.stream().map((platform -> SelectorItem.of(platform.getName(), String.valueOf(platform.getPlatformId())))).collect(Collectors.toList());
+        t.add(SelectorItem.of("cancel", "-1"));
+        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                t, "Select a platform to purchase", null);
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                .run(SingleItemSelector.SingleItemSelectorContext.empty());
+        var pid = Integer.parseInt(context.getResultItem().flatMap(si -> Optional.ofNullable(si.getItem())).get());
+        if(pid == -1) return;
+        SetupDatabase.getJdbcTemplate().update(
+                "INSERT INTO user_owns_platforms (userid, platformid) VALUES (?, ?)", UserCommands.getUser().getUserId(), pid);
+        getTerminal().writer().println("Sucessfully bought " + getPlatformName(pid));
     }
 }
