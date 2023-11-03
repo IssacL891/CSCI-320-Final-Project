@@ -29,7 +29,7 @@ public class CollectionCommands extends AbstractShellComponent {
         var list = SetupDatabase.getJdbcTemplate().query(
                 "SELECT collection.collectionid, collection.userid,\n" +
                         "                collectionname,\n" +
-                        "                COUNT(gic.gameid) AS countOfGames,\n" +
+                        "                COUNT(DISTINCT gic.gameid) AS countOfGames,\n" +
                         "                coalesce(SUM(hour) + SUM(minutes) / 60, 0) AS hours,\n" +
                         "coalesce(SUM(minutes) % 60, 0) AS minutes\n" +
                         "FROM collection\n" +
