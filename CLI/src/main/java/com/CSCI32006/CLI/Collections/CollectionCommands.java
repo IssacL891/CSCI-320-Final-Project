@@ -23,9 +23,17 @@ public class CollectionCommands extends AbstractShellComponent {
         //TODO generalize for all tables
         var id = UserCommands.getUser().getUserId();
         var list = SetupDatabase.getJdbcTemplate().query(
-                "SELECT * FROM collection WHERE userid = ? ORDER BY collectionname;", new CollectionRowMapper(), id
+                "SELECT collection.userid, collection.collectionid, collectionname,\n" +
+                        "COUNT(gic.gameid) AS countOfGames, coalesce(SUM(hour) + SUM(minutes) / 60, 0) AS hours,\n" +
+                        "coalesce(SUM(minutes) % 60, 0) AS minutes\n" +
+                        "FROM collection\n" +
+                        "LEFT JOIN game_in_collection gic\n" +
+                        "on collection.collectionid = gic.collectionid\n" +
+                        "LEFT JOIN user_played_game upg on collection.userid = upg.userid\n" +
+                        "WHERE collection.userid = ?\n" +
+                        "group by collection.userid, collection.collectionid\n", new CollectionDisplayRowMapper(), id
         );
-        var t = list.stream().map((collection -> SelectorItem.of(collection.getCollectionName(), String.valueOf(collection.getCollectionId())))).collect(Collectors.toList());
+        var t = list.stream().map((collectionDisplay -> SelectorItem.of(collectionDisplay.toString(), String.valueOf(collectionDisplay.getCollectionId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
                 t, title, null);
