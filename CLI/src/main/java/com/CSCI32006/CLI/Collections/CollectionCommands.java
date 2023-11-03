@@ -157,7 +157,7 @@ public class CollectionCommands extends AbstractShellComponent {
         }
 
         SetupDatabase.getJdbcTemplate().update(
-                "INSERT INTO game_in_collection (gameid, collectionid, starrating) VALUES(?, ?, ?)", gameId, collectionId, -1
+                "INSERT INTO game_in_collection (gameid, collectionid) VALUES(?, ?)", gameId, collectionId
         );
         getTerminal().writer().println("Successfully added game!");
     }
@@ -190,7 +190,7 @@ public class CollectionCommands extends AbstractShellComponent {
         if(t == -1) return;
         var x = Double.valueOf(Helper.getContextValue(false, "What do you rate this game?", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
         SetupDatabase.getJdbcTemplate().update(
-                "UPDATE game_in_collection SET starrating = ? WHERE collectionid = ? AND gameid = ?", x, collectionId, t);
+                "INSERT INTO user_star_game(userid, starrating, gameid) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET starrating = ? WHERE userid = ? AND gameid = ?", UserCommands.getUser().getUserId(), x, t, x, UserCommands.getUser().getUserId(), t);
         getTerminal().writer().println("Successfully updated " + getGameName(t) + "'s rating to " + x);
     }
 
