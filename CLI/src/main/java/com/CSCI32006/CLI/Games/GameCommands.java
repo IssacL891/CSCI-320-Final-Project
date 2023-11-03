@@ -47,9 +47,15 @@ public class GameCommands extends AbstractShellComponent {
                 if ("cancel".equals(x)) return;
 
                 var list = SetupDatabase.getJdbcTemplate().query(
-                        "SELECT * FROM game WHERE LOWER(LEFT(title, 1)) = LOWER(?);", new GameRowMapper(), x
+                        "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                "JOIN p320_06.game_on_platforms gop on g.gameid = gop.gameid\n" +
+                                "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                "WHERE LOWER(LEFT(title, 1)) = LOWER(?) ORDER BY title, gop.releasedate ;", new GameDisplayRowMapper(), x
                 );
-                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                var w = list.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                 w.add(SelectorItem.of("cancel", "-1"));
                 SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                         w, "Select a game", null);
@@ -75,9 +81,15 @@ public class GameCommands extends AbstractShellComponent {
                 if (x == -1) return;
 
                 var list = SetupDatabase.getJdbcTemplate().query(
-                        "SELECT * FROM game JOIN game_on_platforms gop on game.gameid = gop.gameid WHERE platformid = ?;", new GameRowMapper(), x
+                        "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                "JOIN p320_06.game_on_platforms gop on g.gameid = gop.gameid\n" +
+                                "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                "WHERE gop.platformid = ? ORDER BY title, gop.releasedate;", new GameDisplayRowMapper(), x
                 );
-                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                var w = list.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                 w.add(SelectorItem.of("cancel", "-1"));
                 SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                         w, "Select a game", null);
@@ -104,9 +116,15 @@ public class GameCommands extends AbstractShellComponent {
                 if ("cancel".equals(x)) return;
 
                 var list = SetupDatabase.getJdbcTemplate().query(
-                        "SELECT * FROM game WHERE developername = ?;", new GameRowMapper(), x
+                        "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                "JOIN p320_06.game_on_platforms gop on g.gameid = gop.gameid\n" +
+                                "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                "WHERE developername = ? ORDER BY title, gop.releasedate;", new GameDisplayRowMapper(), x
                 );
-                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                var w = list.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                 w.add(SelectorItem.of("cancel", "-1"));
                 SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                         w, "Select a game", null);
@@ -132,9 +150,16 @@ public class GameCommands extends AbstractShellComponent {
                 if ("cancel".equals(x)) return;
 
                 var list = SetupDatabase.getJdbcTemplate().query(
-                        "SELECT * FROM game JOIN game_belongs_to_genre gbtg on game.gameid = gbtg.gameid JOIN genre g on gbtg.genreid = g.genreid WHERE genretype = ?;", new GameRowMapper(), x
+                        "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                "JOIN p320_06.game_on_platforms gop ON g.gameid = gop.gameid\n" +
+                                "JOIN p320_06.platform p ON p.platformid = gop.platformid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                "JOIN (SELECT gameid, genretype FROM game_belongs_to_genre JOIN p320_06.genre g2 on game_belongs_to_genre.genreid = g2.genreid) gog ON g.gameid = gog.gameid" +
+                                " WHERE genretype = ? ORDER BY title, gop.releasedate;", new GameDisplayRowMapper(), x
                 );
-                var w = list.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                var w = list.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                 w.add(SelectorItem.of("cancel", "-1"));
                 SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                         w, "Select a game", null);
@@ -162,9 +187,15 @@ public class GameCommands extends AbstractShellComponent {
                     case "GTR" -> {
                         var date = java.sql.Date.valueOf(Helper.getContextValue(false, "Enter date greater than: ", "YYYY-MM-dd", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var games = SetupDatabase.getJdbcTemplate().query(
-                                "SELECT * FROM game join game_on_platforms ON game.gameid = game_on_platforms.gameid WHERE releasedate > ? ORDER BY releasedate;", new GameRowMapper(), date
+                                "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                        "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                        "JOIN p320_06.game_on_platforms gop on g.gameid = gop.gameid\n" +
+                                        "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
+                                        "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                        "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                        "WHERE gop.releasedate > ? ORDER BY releasedate, title;", new GameDisplayRowMapper(), date
                         );
-                        var w = games.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                        var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
                         SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                                 w, "Games made after " + date, null);
@@ -177,9 +208,15 @@ public class GameCommands extends AbstractShellComponent {
                     case "LES" -> {
                         var date = java.sql.Date.valueOf(Helper.getContextValue(false, "Enter date less than: ", "YYYY-MM-dd", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var games = SetupDatabase.getJdbcTemplate().query(
-                                "SELECT * FROM game join game_on_platforms ON game.gameid = game_on_platforms.gameid WHERE releasedate < ? ORDER BY releasedate;", new GameRowMapper(), date
+                                "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                        "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                        "JOIN p320_06.game_on_platforms gop on g.gameid = gop.gameid\n" +
+                                        "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
+                                        "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                        "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                        "WHERE gop.releasedate < ? ORDER BY releasedate, title;", new GameDisplayRowMapper(), date
                         );
-                        var w = games.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                        var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
                         SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                                 w, "Games made before " + date, null);
@@ -193,9 +230,15 @@ public class GameCommands extends AbstractShellComponent {
                         var lDate = java.sql.Date.valueOf(Helper.getContextValue(false, "Enter lower bound date: ", "YYYY-MM-dd", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var uDate = java.sql.Date.valueOf(Helper.getContextValue(false, "Enter upper bound date: ", "YYYY-MM-dd", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var games = SetupDatabase.getJdbcTemplate().query(
-                                "SELECT * FROM game JOIN p320_06.game_on_platforms gop on game.gameid = gop.gameid WHERE releasedate BETWEEN ? AND ? ORDER BY releasedate;", new GameRowMapper(), lDate, uDate
+                                "SELECT g.gameid, title, esrb_rating, developername, publishername,\n" +
+                                        "       name AS platformname, avgHours, avgMinutes, avgRatings FROM game as g\n" +
+                                        "JOIN p320_06.game_on_platforms gop on g.gameid = gop.gameid\n" +
+                                        "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
+                                        "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
+                                        "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
+                                        "WHERE gop.releasedate BETWEEN ? AND ? ORDER BY releasedate, title;", new GameDisplayRowMapper(), lDate, uDate
                         );
-                        var w = games.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                        var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
                         SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                                 w, "Games made between " + lDate + ", " + uDate, null);
@@ -225,9 +268,9 @@ public class GameCommands extends AbstractShellComponent {
                     case "GTR" -> {
                         var price = Double.valueOf(Helper.getContextValue(false, "Enter price greater than: ", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var games = SetupDatabase.getJdbcTemplate().query(
-                                "SELECT * FROM game join game_on_platforms ON game.gameid = game_on_platforms.gameid WHERE price > ? ORDER BY releasedate;", new GameRowMapper(), price
+                                "SELECT * FROM game join game_on_platforms ON game.gameid = game_on_platforms.gameid WHERE price > ? ORDER BY releasedate;", new GameDisplayRowMapper(), price
                         );
-                        var w = games.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                        var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
                         SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                                 w, "Games cost more than " + price, null);
@@ -240,9 +283,9 @@ public class GameCommands extends AbstractShellComponent {
                     case "LES" -> {
                         var price = Double.valueOf(Helper.getContextValue(false, "Enter price less than: ", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var games = SetupDatabase.getJdbcTemplate().query(
-                                "SELECT * FROM game join game_on_platforms ON game.gameid = game_on_platforms.gameid WHERE price < ? ORDER BY releasedate;", new GameRowMapper(), price
+                                "SELECT * FROM game join game_on_platforms ON game.gameid = game_on_platforms.gameid WHERE price < ? ORDER BY releasedate;", new GameDisplayRowMapper(), price
                         );
-                        var w = games.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                        var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
                         SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                                 w, "Games less than " + price, null);
@@ -256,9 +299,9 @@ public class GameCommands extends AbstractShellComponent {
                         var lPrice = Double.valueOf(Helper.getContextValue(false, "Enter lower bound price: ", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var uPrice = Double.valueOf(Helper.getContextValue(false, "Enter upper bound price: ", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
                         var games = SetupDatabase.getJdbcTemplate().query(
-                                "SELECT * FROM game JOIN p320_06.game_on_platforms gop on game.gameid = gop.gameid WHERE price BETWEEN ? AND ? ORDER BY releasedate;", new GameRowMapper(), lPrice, uPrice
+                                "SELECT * FROM game JOIN p320_06.game_on_platforms gop on game.gameid = gop.gameid WHERE price BETWEEN ? AND ? ORDER BY releasedate;", new GameDisplayRowMapper(), lPrice, uPrice
                         );
-                        var w = games.stream().map((game -> SelectorItem.of(game.getTitle(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+                        var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
                         SingleItemSelector<String, SelectorItem<String>> component2 = new SingleItemSelector<>(getTerminal(),
                                 w, "Games cost between " + lPrice + ", " + uPrice, null);
