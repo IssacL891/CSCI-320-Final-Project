@@ -6,11 +6,14 @@ import com.CSCI32006.CLI.SetupDatabase;
 import com.CSCI32006.CLI.Users.UserCommands;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
+import org.springframework.shell.command.annotation.OptionValues;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -179,5 +182,39 @@ public class CollectionCommands extends AbstractShellComponent {
         SetupDatabase.getJdbcTemplate().update(
                 "UPDATE game_in_collection SET starrating = ? WHERE collectionid = ? AND gameid = ?", x, collectionId, t);
         getTerminal().writer().println("Successfully updated " + getGameName(t) + "'s rating to " + x);
+    }
+
+    @Command(command = "play game", description = "Play a game. -(r)andom to play a random game.")
+    private void playGame(@Option(shortNames = 'r') boolean random) {
+        String name;
+        int id = -1;
+        if(random) {
+            var t = SetupDatabase.getJdbcTemplate().query("SELECT (gic.gameid, title, esrb_rating, developername, publishername) FROM game\n" +
+                    "    JOIN game_in_collection gic\n" +
+                    "        on game.gameid = gic.gameid\n" +
+                    "         JOIN p320_06.collection c\n" +
+                    "             on c.collectionid = gic.collectionid\n" +
+                    "WHERE userid = ?", new GameRowMapper(), UserCommands.getUser().getUserId());
+            Collections.shuffle(t);
+            if(t.isEmpty()) {
+                getTerminal().writer().println("You have no games!");
+                return;
+            }
+            id = t.get(0).getGameId();
+            name = t.get(0).getTitle();
+        } else {
+            var collectionId = getCollection("List of collections");
+            if(collectionId == -1) return;
+            var t = getGameFromCollection("List of games in collection " + getCollectionName(collectionId), collectionId);
+            if(t == -1) return;
+            name = getGameName(t);
+        }
+        var date = java.sql.Date.valueOf(Helper.getContextValue(false, "When did you play the game? ", "YYYY-MM-dd", getTerminal(), getResourceLoader(), getTemplateExecutor()));
+        var time = Helper.getContextValue(false, "How long did you play " + name + "?", "HH:MM", getTerminal(), getResourceLoader(), getTemplateExecutor());
+        var t = time.split(":");
+        SetupDatabase.getJdbcTemplate().update(
+                "INSERT INTO user_played_game (date, userid, gameid, hour, minutes) VALUES(date = ?, userid = ?, gameid = ?, hour = ?, minutes = ?);"
+                    , date, UserCommands.getUser().getUserId(), id, t[0], t[1]);
+        getTerminal().writer().println("Successfully added playtime!");
     }
 }
