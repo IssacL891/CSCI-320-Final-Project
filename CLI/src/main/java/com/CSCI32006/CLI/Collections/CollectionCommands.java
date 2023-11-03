@@ -199,7 +199,7 @@ public class CollectionCommands extends AbstractShellComponent {
         String name;
         int id = -1;
         if(random) {
-            var t = SetupDatabase.getJdbcTemplate().query("SELECT (gic.gameid, title, esrb_rating, developername, publishername) FROM game\n" +
+            var t = SetupDatabase.getJdbcTemplate().query("SELECT gic.gameid AS gameid, title, esrb_rating, developername, publishername FROM game\n" +
                     "    JOIN game_in_collection gic\n" +
                     "        on game.gameid = gic.gameid\n" +
                     "         JOIN p320_06.collection c\n" +
@@ -212,6 +212,7 @@ public class CollectionCommands extends AbstractShellComponent {
             }
             id = t.get(0).getGameId();
             name = t.get(0).getTitle();
+            getTerminal().writer().println("Selected " + name + " to play!");
         } else {
             var collectionId = getCollection("List of collections");
             if(collectionId == -1) return;
