@@ -190,7 +190,10 @@ public class CollectionCommands extends AbstractShellComponent {
         if(t == -1) return;
         var x = Double.valueOf(Helper.getContextValue(false, "What do you rate this game?", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
         SetupDatabase.getJdbcTemplate().update(
-                "INSERT INTO user_star_game(userid, starrating, gameid) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET starrating = ? WHERE userid = ? AND gameid = ?", UserCommands.getUser().getUserId(), x, t, x, UserCommands.getUser().getUserId(), t);
+                "INSERT INTO user_star_game (userid, starrating, gameid)\n" +
+                        "VALUES (?, ?, ?)\n" +
+                        "ON CONFLICT ON CONSTRAINT user_star_game_pk DO UPDATE\n" +
+                        "    SET starrating = excluded.starrating", UserCommands.getUser().getUserId(), x, t);
         getTerminal().writer().println("Successfully updated " + getGameName(t) + "'s rating to " + x);
     }
 
