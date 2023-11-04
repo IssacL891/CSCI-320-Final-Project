@@ -70,7 +70,7 @@ public class UserCommands extends AbstractShellComponent {
         var list = SetupDatabase.getJdbcTemplate().query(
                 "SELECT * FROM users WHERE NOT userid = ? AND userid NOT in (SELECT useridown FROM followers WHERE useridfollow = ?);", new UserRowMapper(), UserCommands.getUser().getUserId(), UserCommands.getUser().getUserId()
         );
-        var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
+        var t = list.stream().map((user -> SelectorItem.of(user.getEmail(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
                 t, "Select a follower to follow", null);
@@ -92,7 +92,7 @@ public class UserCommands extends AbstractShellComponent {
         var list = SetupDatabase.getJdbcTemplate().query(
                 "SELECT * FROM users JOIN followers f on users.userid = f.useridown WHERE useridfollow = ?", new UserRowMapper(), UserCommands.getUser().getUserId()
         );
-        var t = list.stream().map((user -> SelectorItem.of(user.getUsername(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
+        var t = list.stream().map((user -> SelectorItem.of(user.getEmail(), String.valueOf(user.getUserId())))).collect(Collectors.toList());
         t.add(SelectorItem.of("cancel", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
                 t, "Select a follower to unfollow", null);
