@@ -1,0 +1,51 @@
+{"level":"info","ts":1701138084.3449407,"msg":"no cache file found, create a new one","path":"/var/lib/gorse/worker_cache.data"}
+{"level":"info","ts":1701138084.3450475,"msg":"start worker","managed":false,"n_jobs":1,"worker_name":"strange_darwin"}
+{"level":"info","ts":1701138084.3451993,"msg":"start meta sync","meta_timeout":10}
+{"level":"error","ts":1701138084.6029713,"msg":"failed to get meta","error":"rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 172.19.0.4:8086: connect: connection refused\""}
+{"level":"info","ts":1701138094.6135085,"msg":"connect data store","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138094.6188211,"msg":"connect cache store","database":"redis://:@redis:6379"}
+{"level":"info","ts":1701138144.3554037,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138144.4278965,"msg":"complete ranking recommendation","used_time":"70.28197ms"}
+{"level":"info","ts":1701138204.3567502,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138204.4382532,"msg":"complete ranking recommendation","used_time":"78.600221ms"}
+{"level":"info","ts":1701138204.658609,"msg":"new ranking model found","old_version":"0","new_version":"7567c716d2527e8"}
+{"level":"info","ts":1701138204.6587105,"msg":"new click model found","old_version":"0","new_version":"130bc7c15c0ee0d3"}
+{"level":"info","ts":1701138204.6587389,"msg":"start pull ranking model"}
+{"level":"info","ts":1701138204.6719096,"msg":"synced ranking model","version":"7567c716d2527e8"}
+{"level":"info","ts":1701138204.6719553,"msg":"complete receiving ranking model"}
+{"level":"info","ts":1701138204.6720045,"msg":"start pull click model"}
+{"level":"info","ts":1701138204.6856847,"msg":"synced click model","version":"130bc7c15c0ee0d3"}
+{"level":"info","ts":1701138204.6857498,"msg":"complete receiving click model"}
+{"level":"info","ts":1701138204.6879177,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138204.6915128,"msg":"start building ranking index"}
+{"level":"info","ts":1701138204.806474,"msg":"try to build vector index","index_type":"HNSW","ef_construction":128,"recall":0.99000156,"build_time":"43.674114ms"}
+{"level":"info","ts":1701138204.8066278,"msg":"complete building ranking index","build_time":0.115115054}
+{"level":"info","ts":1701138205.0314686,"msg":"complete ranking recommendation","used_time":"224.820949ms"}
+{"level":"info","ts":1701138264.3556373,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138264.5960855,"msg":"complete ranking recommendation","used_time":"238.664043ms"}
+{"level":"info","ts":1701138324.3597732,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138325.4336104,"msg":"complete ranking recommendation","used_time":"1.068629911s"}
+{"level":"info","ts":1701138384.354026,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138385.6102884,"msg":"complete ranking recommendation","used_time":"1.254676808s"}
+{"level":"info","ts":1701138444.3587246,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138445.7118497,"msg":"complete ranking recommendation","used_time":"1.346831162s"}
+{"level":"info","ts":1701138504.3579428,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138505.8932688,"msg":"complete ranking recommendation","used_time":"1.527657562s"}
+{"level":"info","ts":1701138564.3535867,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138565.6792376,"msg":"complete ranking recommendation","used_time":"1.321172135s"}
+{"level":"info","ts":1701138624.3559942,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138625.5676687,"msg":"complete ranking recommendation","used_time":"1.209006008s"}
+{"level":"info","ts":1701138684.356586,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138685.7055135,"msg":"complete ranking recommendation","used_time":"1.341391227s"}
+{"level":"info","ts":1701138744.3573036,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138745.6346138,"msg":"complete ranking recommendation","used_time":"1.271285673s"}
+{"level":"info","ts":1701138804.3565016,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138805.5936673,"msg":"complete ranking recommendation","used_time":"1.231798887s"}
+{"level":"info","ts":1701138864.3550308,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138865.6080728,"msg":"complete ranking recommendation","used_time":"1.247860764s"}
+{"level":"info","ts":1701138924.3550303,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138925.6670008,"msg":"complete ranking recommendation","used_time":"1.30592716s"}
+{"level":"info","ts":1701138984.357933,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701138985.6823685,"msg":"complete ranking recommendation","used_time":"1.31863272s"}
+{"level":"info","ts":1701139044.3558643,"msg":"ranking recommendation","n_working_users":158,"n_jobs":1,"cache_size":100}
+{"level":"info","ts":1701139045.5214772,"msg":"complete ranking recommendation","used_time":"1.162599354s"}

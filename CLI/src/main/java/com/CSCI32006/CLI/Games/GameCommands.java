@@ -193,7 +193,7 @@ public class GameCommands extends AbstractShellComponent {
                                         "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
                                         "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
                                         "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
-                                        "WHERE gop.releasedate > ? ORDER BY releasedate, title;", new GameDisplayRowMapper(), date
+                                        "WHERE gop.releasedate > ? ORDER BY gop.releasedate, title;", new GameDisplayRowMapper(), date
                         );
                         var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
@@ -214,7 +214,7 @@ public class GameCommands extends AbstractShellComponent {
                                         "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
                                         "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
                                         "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
-                                        "WHERE gop.releasedate < ? ORDER BY releasedate, title;", new GameDisplayRowMapper(), date
+                                        "WHERE gop.releasedate < ? ORDER BY gop.releasedate, title;", new GameDisplayRowMapper(), date
                         );
                         var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));
@@ -236,7 +236,7 @@ public class GameCommands extends AbstractShellComponent {
                                         "JOIN p320_06.platform p on p.platformid = gop.platformid\n" +
                                         "JOIN (SELECT gameid, TRUNC(AVG(hour), 2) AS avgHours, TRUNC(AVG(minutes), 2) AS avgMinutes FROM user_played_game group by gameid) upg ON upg.gameid = g.gameid\n" +
                                         "JOIN (SELECT gameid, TRUNC(AVG(starrating), 2) AS avgRatings FROM user_star_game group by gameid) usg ON usg.gameid = g.gameid\n" +
-                                        "WHERE gop.releasedate BETWEEN ? AND ? ORDER BY releasedate, title;", new GameDisplayRowMapper(), lDate, uDate
+                                        "WHERE gop.releasedate BETWEEN ? AND ? ORDER BY gop.releasedate, title;", new GameDisplayRowMapper(), lDate, uDate
                         );
                         var w = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
                         w.add(SelectorItem.of("cancel", "cancel"));

@@ -1,0 +1,8 @@
+{"level":"info","ts":1701138084.3313699,"msg":"no cache file found, create a new one","path":"/var/lib/gorse/server_cache.data"}
+{"level":"info","ts":1701138084.3315663,"msg":"start server","server_name":"inspiring_gagarin","server_host":"0.0.0.0","server_port":8087,"master_host":"master","master_port":8086}
+{"level":"info","ts":1701138084.33183,"msg":"start meta sync","meta_timeout":10}
+{"level":"info","ts":1701138084.3331473,"msg":"start http server","url":"http://0.0.0.0:8087","cors_methods":["GET","POST","PUT","DELETE","PATCH"],"cors_doamins":[".*"]}
+{"level":"error","ts":1701138084.6029708,"msg":"failed to get meta","error":"rpc error: code = Unavailable desc = connection error: desc = \"transport: Error while dialing dial tcp 172.19.0.4:8086: connect: connection refused\""}
+{"level":"info","ts":1701138094.6077595,"msg":"connect data store","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138094.6158006,"msg":"connect cache store","database":"redis://:@redis:6379"}
+{"level":"info","ts":1701138094.6160958,"msg":"create trace provider","tracing_config":{"EnableTracing":false,"Exporter":"jaeger","CollectorEndpoint":"http://localhost:14268/api/traces","Sampler":"always","Ratio":1}}

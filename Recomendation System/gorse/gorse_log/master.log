@@ -1,0 +1,130 @@
+{"level":"info","ts":1701138084.221933,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138084.2226999,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138084.2227397,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"fatal","ts":1701138084.2232893,"msg":"failed to connect data database","error":"dial tcp 172.19.0.2:3306: connect: connection refused","errorVerbose":"dial tcp 172.19.0.2:3306: connect: connection refused\ngithub.com/zhenghaoz/gorse/storage.ProbeMySQLIsolationVariableName:83: \ngithub.com/zhenghaoz/gorse/storage/data.Open:154: ","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138084.6016717,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138084.602453,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138084.6025043,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"fatal","ts":1701138084.6029184,"msg":"failed to connect data database","error":"dial tcp 172.19.0.2:3306: connect: connection refused","errorVerbose":"dial tcp 172.19.0.2:3306: connect: connection refused\ngithub.com/zhenghaoz/gorse/storage.ProbeMySQLIsolationVariableName:83: \ngithub.com/zhenghaoz/gorse/storage/data.Open:154: ","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138084.986358,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138084.9870777,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138084.9871047,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"fatal","ts":1701138084.9874952,"msg":"failed to connect data database","error":"dial tcp 172.19.0.2:3306: connect: connection refused","errorVerbose":"dial tcp 172.19.0.2:3306: connect: connection refused\ngithub.com/zhenghaoz/gorse/storage.ProbeMySQLIsolationVariableName:83: \ngithub.com/zhenghaoz/gorse/storage/data.Open:154: ","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138085.6370678,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138085.6378014,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138085.6378345,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"fatal","ts":1701138085.6382043,"msg":"failed to connect data database","error":"dial tcp 172.19.0.2:3306: connect: connection refused","errorVerbose":"dial tcp 172.19.0.2:3306: connect: connection refused\ngithub.com/zhenghaoz/gorse/storage.ProbeMySQLIsolationVariableName:83: \ngithub.com/zhenghaoz/gorse/storage/data.Open:154: ","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138086.6688492,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138086.669491,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138086.669525,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"fatal","ts":1701138086.669887,"msg":"failed to connect data database","error":"dial tcp 172.19.0.2:3306: connect: connection refused","errorVerbose":"dial tcp 172.19.0.2:3306: connect: connection refused\ngithub.com/zhenghaoz/gorse/storage.ProbeMySQLIsolationVariableName:83: \ngithub.com/zhenghaoz/gorse/storage/data.Open:154: ","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138088.472474,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138088.4731548,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138088.4731846,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"fatal","ts":1701138088.4735296,"msg":"failed to connect data database","error":"dial tcp 172.19.0.2:3306: connect: connection refused","errorVerbose":"dial tcp 172.19.0.2:3306: connect: connection refused\ngithub.com/zhenghaoz/gorse/storage.ProbeMySQLIsolationVariableName:83: \ngithub.com/zhenghaoz/gorse/storage/data.Open:154: ","database":"mysql://xxxxx:xxxxxxxxxx@tcp(mysql:3306)/gorse"}
+{"level":"info","ts":1701138091.9209356,"msg":"load config","config":"/etc/gorse/config.toml"}
+{"level":"info","ts":1701138091.9215376,"msg":"load cache","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138091.921573,"msg":"no local cache found, create a new one","path":"/var/lib/gorse/master_cache.data"}
+{"level":"info","ts":1701138091.9583006,"msg":"start model fit","period":3600}
+{"level":"info","ts":1701138091.958328,"msg":"start model searcher","period":21600}
+{"level":"info","ts":1701138091.9583814,"msg":"load dataset","positive_feedback_types":["User played game","User stars game"],"read_feedback_types":["game in collection"],"item_ttl":0,"feedback_ttl":0}
+{"level":"info","ts":1701138091.958424,"msg":"start rpc server","host":"0.0.0.0","port":8086}
+{"level":"info","ts":1701138091.9598534,"msg":"start http server","url":"http://0.0.0.0:8088","cors_methods":[],"cors_doamins":[]}
+{"level":"warn","ts":1701138091.963068,"msg":"empty ranking dataset","positive_feedback_type":["User played game","User stars game"]}
+{"level":"info","ts":1701138094.6059234,"msg":"node up","node_name":"inspiring_gagarin","node_ip":"172.19.0.6","node_type":"Server"}
+{"level":"info","ts":1701138094.6123376,"msg":"node up","node_name":"strange_darwin","node_ip":"172.19.0.5","node_type":"Worker"}
+{"level":"info","ts":1701138096.2961707,"msg":"GET /api/dashboard/categories","request_id":"ee9873fd-e48f-45ec-a1a9-1616f1d99409","status_code":200,"response_time":0.000078492}
+{"level":"info","ts":1701138096.2962093,"msg":"GET /api/dashboard/rates?n=30","request_id":"a9dd2fbd-57a4-4b85-88dc-33edf0d9aaa4","status_code":200,"response_time":0.000332101}
+{"level":"info","ts":1701138096.2964344,"msg":"GET /api/dashboard/popular/","request_id":"7dd36726-1782-40cc-9959-56714fb5a274","status_code":200,"response_time":0.00016652}
+{"level":"info","ts":1701138096.2965784,"msg":"GET /api/dashboard/categories","request_id":"55934053-7c79-43b8-b890-27a4f0ea6e29","status_code":200,"response_time":0.00009516}
+{"level":"info","ts":1701138096.2968726,"msg":"GET /api/dashboard/latest/","request_id":"d93fd9f6-2812-4f7c-9d5e-38528192ba26","status_code":200,"response_time":0.000199245}
+{"level":"warn","ts":1701138096.2974353,"msg":"failed to get last fit matching model time","request_id":"13223c4a-aa2f-493b-8224-c390690eddbf","error":"global_meta/last_fit_matching_model_time: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/last_fit_matching_model_time"}
+{"level":"info","ts":1701138096.297512,"msg":"GET /api/dashboard/config","request_id":"4a14c534-8f3f-40b8-9f3c-1e9abfb928bd","status_code":200,"response_time":0.000229239}
+{"level":"warn","ts":1701138096.2975676,"msg":"failed to get last fit ranking model time","request_id":"13223c4a-aa2f-493b-8224-c390690eddbf","error":"global_meta/last_fit_ranking_model_time: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/last_fit_ranking_model_time"}
+{"level":"warn","ts":1701138096.2976382,"msg":"failed to get user neighbor index recall","request_id":"13223c4a-aa2f-493b-8224-c390690eddbf","error":"global_meta/user_neighbor_index_recall: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/user_neighbor_index_recall"}
+{"level":"warn","ts":1701138096.2977417,"msg":"failed to get item neighbor index recall","request_id":"13223c4a-aa2f-493b-8224-c390690eddbf","error":"global_meta/item_neighbor_index_recall: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/item_neighbor_index_recall"}
+{"level":"warn","ts":1701138096.297857,"msg":"failed to get matching index recall","request_id":"13223c4a-aa2f-493b-8224-c390690eddbf","error":"global_meta/matching_index_recall: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/matching_index_recall"}
+{"level":"info","ts":1701138096.298015,"msg":"GET /api/dashboard/stats","request_id":"13223c4a-aa2f-493b-8224-c390690eddbf","status_code":200,"response_time":0.001211442}
+{"level":"warn","ts":1701138096.298584,"msg":"failed to get last fit matching model time","request_id":"9ae573d4-df53-470b-a0ca-8ca14b07ee70","error":"global_meta/last_fit_matching_model_time: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/last_fit_matching_model_time"}
+{"level":"warn","ts":1701138096.2987947,"msg":"failed to get last fit ranking model time","request_id":"9ae573d4-df53-470b-a0ca-8ca14b07ee70","error":"global_meta/last_fit_ranking_model_time: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/last_fit_ranking_model_time"}
+{"level":"warn","ts":1701138096.298909,"msg":"failed to get user neighbor index recall","request_id":"9ae573d4-df53-470b-a0ca-8ca14b07ee70","error":"global_meta/user_neighbor_index_recall: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/user_neighbor_index_recall"}
+{"level":"warn","ts":1701138096.2990205,"msg":"failed to get item neighbor index recall","request_id":"9ae573d4-df53-470b-a0ca-8ca14b07ee70","error":"global_meta/item_neighbor_index_recall: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/item_neighbor_index_recall"}
+{"level":"warn","ts":1701138096.299151,"msg":"failed to get matching index recall","request_id":"9ae573d4-df53-470b-a0ca-8ca14b07ee70","error":"global_meta/matching_index_recall: object not found","errorVerbose":"github.com/zhenghaoz/gorse/storage/cache.init:132: object not found\ngithub.com/zhenghaoz/gorse/storage/cache.(*Redis).Get:299: global_meta/matching_index_recall"}
+{"level":"info","ts":1701138096.2992337,"msg":"GET /api/dashboard/stats","request_id":"9ae573d4-df53-470b-a0ca-8ca14b07ee70","status_code":200,"response_time":0.001337426}
+{"level":"info","ts":1701138138.0480323,"msg":"complete import users","time_used":0.0032203,"num_users":158}
+{"level":"info","ts":1701138139.0016797,"msg":"load dataset","positive_feedback_types":["User played game","User stars game"],"read_feedback_types":["game in collection"],"item_ttl":0,"feedback_ttl":0}
+{"level":"info","ts":1701138139.009244,"msg":"prepare to fit click model","n_jobs":1}
+{"level":"warn","ts":1701138139.009319,"msg":"empty ranking dataset","positive_feedback_type":["User played game","User stars game"]}
+{"level":"info","ts":1701138139.0096855,"msg":"start searching neighbors of users","n_cache":100}
+{"level":"info","ts":1701138139.0207603,"msg":"try to build vector index","index_type":"IVF","num_probe":8,"recall":0,"build_time":"196.514µs"}
+{"level":"info","ts":1701138139.024674,"msg":"try to build vector index","index_type":"IVF","num_probe":16,"recall":0,"build_time":"196.514µs"}
+{"level":"info","ts":1701138139.0279036,"msg":"try to build vector index","index_type":"IVF","num_probe":32,"recall":0,"build_time":"196.514µs"}
+{"level":"info","ts":1701138139.039368,"msg":"complete searching neighbors of users","search_time":"29.444787ms"}
+{"level":"info","ts":1701138139.039389,"msg":"start searching ranking model"}
+{"level":"warn","ts":1701138139.039394,"msg":"empty ranking dataset","positive_feedback_type":["User played game","User stars game"]}
+{"level":"info","ts":1701138139.0394142,"msg":"start searching click model"}
+{"level":"warn","ts":1701138139.0394187,"msg":"empty click dataset","positive_feedback_type":["User played game","User stars game"]}
+{"level":"info","ts":1701138139.039424,"msg":"start cache garbage collection"}
+{"level":"info","ts":1701138148.79265,"msg":"GET /api/items","request_id":"10dfa95d-7a8d-4c97-ac45-58037fe65202","status_code":200,"response_time":0.000459851}
+{"level":"info","ts":1701138149.6736488,"msg":"GET /api/dashboard/users","request_id":"8c16da55-3a95-4201-945d-fc65a78b3aa3","status_code":200,"response_time":0.000677795}
+{"level":"info","ts":1701138153.0386634,"msg":"GET /api/dashboard/user/0/neighbors","request_id":"74d24373-3e4a-4df9-a5f8-b6157a276137","status_code":200,"response_time":0.000175994}
+{"level":"info","ts":1701138153.0389473,"msg":"GET /api/user/0","request_id":"6c3eb56e-124e-4da7-a29b-91e02b7c0422","status_code":200,"response_time":0.000390359}
+{"level":"info","ts":1701138154.4391112,"msg":"GET /api/dashboard/users","request_id":"d50373db-0604-403e-b8e0-b6b01e617249","status_code":200,"response_time":0.001496396}
+{"level":"info","ts":1701138155.9402661,"msg":"GET /api/items","request_id":"707e439a-1c08-4e7e-a00c-4c2515b1a992","status_code":200,"response_time":0.000371948}
+{"level":"info","ts":1701138157.9960039,"msg":"GET /api/dashboard/users","request_id":"9d7dc817-62b3-476f-9db6-f8d50a9d5ce7","status_code":200,"response_time":0.003166932}
+{"level":"info","ts":1701138160.0384502,"msg":"GET /api/items","request_id":"d4f00e24-21a2-451f-ba9a-8753fdf87369","status_code":200,"response_time":0.000424304}
+{"level":"info","ts":1701138198.2423239,"msg":"complete import feedback","time_used":0.050342269,"num_items":1880}
+{"level":"info","ts":1701138199.0576432,"msg":"load dataset","positive_feedback_types":["User played game","User stars game"],"read_feedback_types":["game in collection"],"item_ttl":0,"feedback_ttl":0}
+{"level":"info","ts":1701138199.0769036,"msg":"prepare to fit click model","n_jobs":1}
+{"level":"info","ts":1701138199.0770133,"msg":"fit FM","train_size":16,"train_positive_count":14,"train_negative_count":2,"test_size":4,"test_positive_count":4,"test_negative_count":0,"task":"c","params":null,"config":{"Verbose":10,"Task":{"Name":"Fit click-through rate prediction model","Status":"Running","Done":0,"Total":200,"StartTime":"2023-11-28T02:23:19.076999058Z","FinishTime":"0001-01-01T00:00:00Z","Error":""}}}
+{"level":"info","ts":1701138199.0802565,"msg":"fit fm complete","Accuracy":0,"Precision":0,"Recall":0,"AUC":0}
+{"level":"info","ts":1701138199.0802994,"msg":"fit click model complete","version":"130bc7c15c0ee0d3"}
+{"level":"info","ts":1701138199.0804873,"msg":"wait ranking model"}
+{"level":"info","ts":1701138199.0805922,"msg":"fit bpr","train_set_size":748,"test_set_size":113,"params":null,"config":{"Verbose":10,"Candidates":100,"TopK":10,"Task":{"Name":"Fit collaborative filtering model","Status":"Running","Done":0,"Total":100,"StartTime":"2023-11-28T02:23:19.08057787Z","FinishTime":"0001-01-01T00:00:00Z","Error":""}}}
+{"level":"info","ts":1701138199.1057956,"msg":"fit bpr complete","NDCG@10":0.8098207,"Precision@10":0.095575266,"Recall@10":0.9557522}
+{"level":"info","ts":1701138199.1058235,"msg":"fit ranking model complete","version":"7567c716d2527e8"}
+{"level":"info","ts":1701138199.1112218,"msg":"write model to local cache","ranking_model_name":"bpr","ranking_model_version":"7567c716d2527e8","ranking_model_score":0.8098207,"ranking_model_params":null}
+{"level":"info","ts":1701138199.1112463,"msg":"start searching neighbors of users","n_cache":100}
+{"level":"info","ts":1701138199.1158104,"msg":"try to build vector index","index_type":"IVF","num_probe":8,"recall":0,"build_time":"38.417µs"}
+{"level":"info","ts":1701138199.1199036,"msg":"try to build vector index","index_type":"IVF","num_probe":16,"recall":0,"build_time":"38.417µs"}
+{"level":"info","ts":1701138199.123974,"msg":"try to build vector index","index_type":"IVF","num_probe":32,"recall":0,"build_time":"38.417µs"}
+{"level":"info","ts":1701138199.1384807,"msg":"complete searching neighbors of users","search_time":"27.165342ms"}
+{"level":"info","ts":1701138199.1385233,"msg":"start searching neighbors of items","n_cache":100}
+{"level":"info","ts":1701138199.1471877,"msg":"try to build vector index","index_type":"IVF","num_probe":7,"recall":0,"build_time":"47.372µs"}
+{"level":"info","ts":1701138199.1532385,"msg":"try to build vector index","index_type":"IVF","num_probe":14,"recall":0,"build_time":"47.372µs"}
+{"level":"info","ts":1701138199.1593988,"msg":"try to build vector index","index_type":"IVF","num_probe":28,"recall":0,"build_time":"47.372µs"}
+{"level":"info","ts":1701138199.1748707,"msg":"complete searching neighbors of items","search_time":"36.306138ms"}
+{"level":"info","ts":1701138200.6286738,"msg":"GET /api/dashboard/config","request_id":"8d0f95c8-f52b-4d80-9e27-309a5603b989","status_code":200,"response_time":0.000166481}
+{"level":"error","ts":1701138311.745544,"msg":"bad request","request_id":"","error":"invalid label `` at line 142 (label cannot be empty)"}
+{"level":"info","ts":1701138311.749774,"msg":"complete import items","time_used":0.004697908,"num_items":141}
+{"level":"info","ts":1701138312.1554523,"msg":"load dataset","positive_feedback_types":["User played game","User stars game"],"read_feedback_types":["game in collection"],"item_ttl":0,"feedback_ttl":0}
+{"level":"info","ts":1701138312.186902,"msg":"prepare to fit click model","n_jobs":1}
+{"level":"info","ts":1701138312.1872358,"msg":"nothing changed"}
+{"level":"info","ts":1701138312.1874928,"msg":"nothing changed"}
+{"level":"info","ts":1701138312.1875038,"msg":"No update of user neighbors needed."}
+{"level":"info","ts":1701138312.18752,"msg":"No item neighbors need to be updated."}
+{"level":"error","ts":1701138335.8052945,"msg":"bad request","request_id":"","error":"invalid label `` at line 142 (label cannot be empty)"}
+{"level":"info","ts":1701138335.8097086,"msg":"complete import items","time_used":0.00530101,"num_items":141}
+{"level":"info","ts":1701138336.1750836,"msg":"load dataset","positive_feedback_types":["User played game","User stars game"],"read_feedback_types":["game in collection"],"item_ttl":0,"feedback_ttl":0}
+{"level":"info","ts":1701138336.1957345,"msg":"prepare to fit click model","n_jobs":1}
+{"level":"info","ts":1701138336.1960244,"msg":"nothing changed"}
+{"level":"info","ts":1701138336.1963005,"msg":"nothing changed"}
+{"level":"info","ts":1701138336.1963117,"msg":"No update of user neighbors needed."}
+{"level":"info","ts":1701138336.1963298,"msg":"No item neighbors need to be updated."}
+{"level":"info","ts":1701138353.1995358,"msg":"complete import items","time_used":0.00796418,"num_items":311}
+{"level":"info","ts":1701138354.1914403,"msg":"load dataset","positive_feedback_types":["User played game","User stars game"],"read_feedback_types":["game in collection"],"item_ttl":0,"feedback_ttl":0}
+{"level":"info","ts":1701138354.217624,"msg":"prepare to fit click model","n_jobs":1}
+{"level":"info","ts":1701138354.2180955,"msg":"nothing changed"}
+{"level":"info","ts":1701138354.2185237,"msg":"nothing changed"}
+{"level":"info","ts":1701138354.2185416,"msg":"No update of user neighbors needed."}
+{"level":"info","ts":1701138354.218563,"msg":"No item neighbors need to be updated."}
+{"level":"info","ts":1701138362.7168925,"msg":"GET /api/dashboard/categories","request_id":"fa37e788-4ff1-419c-bea3-ac5f602bc780","status_code":200,"response_time":0.000154283}
+{"level":"info","ts":1701138362.7170105,"msg":"GET /api/dashboard/rates?n=30","request_id":"18d4dce1-e4fd-4ce6-9ee8-0a4514249cf4","status_code":200,"response_time":0.000401039}
+{"level":"info","ts":1701138362.7174578,"msg":"GET /api/dashboard/categories","request_id":"e556db31-3308-43ad-8658-2915d3dd0738","status_code":200,"response_time":0.00011085}
+{"level":"info","ts":1701138362.7177289,"msg":"GET /api/dashboard/config","request_id":"e275c9b2-21e2-468f-b556-48fa0962e13f","status_code":200,"response_time":0.000178908}
+{"level":"info","ts":1701138362.7180495,"msg":"GET /api/dashboard/stats","request_id":"57c3b92f-8ed0-4a70-b5fe-7e97bda97af9","status_code":200,"response_time":0.000482919}
+{"level":"info","ts":1701138362.7180622,"msg":"GET /api/dashboard/stats","request_id":"db3ff437-43e1-403f-827c-250acea55bca","status_code":200,"response_time":0.000562395}
+{"level":"info","ts":1701138362.7196956,"msg":"GET /api/dashboard/latest/","request_id":"ef87fef5-a63f-4ac8-9716-c6c5680dabd0","status_code":200,"response_time":0.002326251}
+{"level":"info","ts":1701138362.7198665,"msg":"GET /api/dashboard/popular/","request_id":"f96e8c85-4a3c-4403-8809-568804be5972","status_code":200,"response_time":0.002468084}
+{"level":"info","ts":1701138999.4025605,"msg":"GET /api/dashboard/config","request_id":"f47f4a9f-df8a-4e4c-af07-3eb453695a9e","status_code":200,"response_time":0.000156254}
+{"level":"info","ts":1701138999.9387374,"msg":"GET /api/items","request_id":"6fb1ff17-762f-4a23-9168-c32729c3d7e0","status_code":200,"response_time":0.000511733}
