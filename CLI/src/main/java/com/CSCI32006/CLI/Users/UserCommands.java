@@ -1,5 +1,7 @@
 package com.CSCI32006.CLI.Users;
 
+import com.CSCI32006.CLI.Collections.CollectionDisplayRowMapper;
+import com.CSCI32006.CLI.Collections.CollectionRowMapper;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
 import lombok.Getter;
@@ -126,4 +128,13 @@ public class UserCommands extends AbstractShellComponent {
             setupNewUser(username);
         }
     }
+
+    @Command(command = "user profile", description = "displays user profile statistics")
+    private void user_profile() {
+        var cnt = SetupDatabase.getJdbcTemplate().queryForObject(
+                "SELECT COUNT(*) FROM collection where userid = ?;", Integer.class, UserCommands.getUser().getUserId()
+        );
+        getTerminal().writer().println("Collection count: " + cnt);
+    }
+
 }
