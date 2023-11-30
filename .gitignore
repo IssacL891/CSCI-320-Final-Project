@@ -20,3 +20,6 @@ out/
 .vscode/
 
 .DS_Store
+Recomendation System/mysql_data/
+
+Recomendation System/gorse/
