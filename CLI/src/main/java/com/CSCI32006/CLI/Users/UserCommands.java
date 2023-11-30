@@ -1,17 +1,21 @@
 package com.CSCI32006.CLI.Users;
 
+import com.CSCI32006.CLI.Games.Game;
+import com.CSCI32006.CLI.Games.GameRowMapper;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
 import lombok.Getter;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -125,5 +129,31 @@ public class UserCommands extends AbstractShellComponent {
         } else {
             setupNewUser(username);
         }
+    }
+
+    private List<Game> getTop(Date startdate, Date enddate, int limit) {
+        return SetupDatabase.getJdbcTemplate().query("SELECT g.gameid, title, esrb_rating, developername, publishername\n" +
+                "FROM user_star_game usg JOIN p320_06.game g on usg.gameid = g.gameid\n" +
+                "GROUP BY g.gameid, g.gameid, title, esrb_rating, developername, publishername " +
+                        "order by (count(starrating) * avg(starrating) + get_x_percentile_rating(0.25, ?, ?) * get_avg_rating(?, ?)) / (count(starrating) + get_avg_rating(?, ?)) DESC LIMIT ?;",
+                new GameRowMapper(), startdate, enddate, startdate, enddate, startdate, enddate, limit);
+    }
+    @Command(command = "stats", description = "user stats")
+    private void getStats() {
+        getTerminal().writer().println("Stats:");
+        int collections = SetupDatabase.getJdbcTemplate().queryForObject("SELECT COUNT(*) FROM collection WHERE userid = ?", Integer.class, user.getUserId());
+        getTerminal().writer().println("Collections: " + collections);
+        int followers = SetupDatabase.getJdbcTemplate().queryForObject("SELECT COUNT(*) FROM followers WHERE  useridown = ?", Integer.class, user.getUserId());
+        getTerminal().writer().println("Followers: " + followers);
+        int following = SetupDatabase.getJdbcTemplate().queryForObject("SELECT COUNT(*) FROM followers WHERE  useridfollow = ?", Integer.class, user.getUserId());
+        getTerminal().writer().println("Following: " + following);
+        var t = getTop(null, null, 10).stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+        t.add(SelectorItem.of("Exit", "-1"));
+        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                t, "My Top 10 Games: ", null);
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                .run(SingleItemSelector.SingleItemSelectorContext.empty());
     }
 }
