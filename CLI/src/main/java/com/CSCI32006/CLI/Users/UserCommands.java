@@ -2,6 +2,8 @@ package com.CSCI32006.CLI.Users;
 
 import com.CSCI32006.CLI.Collections.CollectionDisplayRowMapper;
 import com.CSCI32006.CLI.Collections.CollectionRowMapper;
+import com.CSCI32006.CLI.Games.GameRowMapper;
+import com.CSCI32006.CLI.Games.GameTimeRowMapper;
 import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.SetupDatabase;
 import lombok.Getter;
@@ -135,6 +137,24 @@ public class UserCommands extends AbstractShellComponent {
                 "SELECT COUNT(*) FROM collection where userid = ?;", Integer.class, UserCommands.getUser().getUserId()
         );
         getTerminal().writer().println("Collection count: " + cnt);
+        cnt = SetupDatabase.getJdbcTemplate().queryForObject(
+                "SELECT COUNT(*) FROM followers where useridown = ?;", Integer.class, UserCommands.getUser().getUserId()
+        );
+        getTerminal().writer().println("Follower count: " + cnt);
+        cnt = SetupDatabase.getJdbcTemplate().queryForObject(
+                "SELECT COUNT(*) FROM followers where useridfollow = ?;", Integer.class, UserCommands.getUser().getUserId()
+        );
+        getTerminal().writer().println("Following count: " + cnt);
+        var list = SetupDatabase.getJdbcTemplate().query(
+                "SELECT title, SUM(hour) * 60 + SUM(minutes) as time_played " +
+                     "FROM user_played_game INNER JOIN game on game.gameid = user_played_game.gameid " +
+                     "WHERE userid = ? GROUP BY game.gameid ORDER BY time_played DESC LIMIT 10", new GameTimeRowMapper(), UserCommands.getUser().getUserId()
+        );
+        getTerminal().writer().println("Top Games by Play Time: ");
+        for (Object l : list) {
+            getTerminal().writer().println(l.toString());
+        }
+
     }
 
 }
