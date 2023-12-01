@@ -4,6 +4,7 @@ import com.jcraft.jsch.HostKey;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import io.gorse.gorse4j.Gorse;
 import lombok.Getter;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +19,6 @@ import java.sql.SQLException;
 import java.util.Base64;
 import java.util.Objects;
 import static org.springframework.shell.context.InteractionMode.INTERACTIVE;
-
 //noinspection JSUnusedGlobalSymbols
 @Command(group = "Setup Database Commands")
 @Getter
@@ -26,9 +26,11 @@ public class SetupDatabase extends AbstractShellComponent implements Quit.Comman
 
     private Session session;
     private PGSimpleDataSource dataSource;
-    @Setter
     @Getter
     private static JdbcTemplate jdbcTemplate;
+
+    @Getter
+    private static Gorse client;
     private void setDatabaseConn(String username, String password){
         dataSource = new PGSimpleDataSource();
         dataSource.setURL(Config.URL);
@@ -60,6 +62,7 @@ public class SetupDatabase extends AbstractShellComponent implements Quit.Comman
     }
     @Command(command = "login database", description = "Logs into the database")
     private void login() throws JSchException {
+        client = new Gorse("http://0.0.0.0:8088", "");
         var username =
                 Helper.getContextValue(false, "Enter Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor());
         var password =

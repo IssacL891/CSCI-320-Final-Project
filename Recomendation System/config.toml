@@ -59,10 +59,10 @@ n_jobs = 1
 meta_timeout = "10s"
 
 # Username for the master node dashboard.
-dashboard_user_name = ""
+dashboard_user_name = "admin"
 
 # Password for the master node dashboard.
-dashboard_password = ""
+dashboard_password = "abc123"
 
 # Secret key for admin APIs (SSL required).
 admin_api_key = ""
@@ -98,10 +98,10 @@ cache_expire = "72h"
 [recommend.data_source]
 
 # The feedback types for positive events.
-positive_feedback_types = ["User played game", "User stars game"]
+positive_feedback_types = ["User played game", "Game in collection", "User stars game 3 and above"]
 
 # The feedback types for read events.
-read_feedback_types = ["game in collection"]
+read_feedback_types = ["User stars game below 3"]
 
 # The time-to-live (days) of positive feedback, 0 means disabled. The default value is 0.
 positive_feedback_ttl = 0

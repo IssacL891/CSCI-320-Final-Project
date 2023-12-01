@@ -5,12 +5,16 @@ import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.Platforms.PlatformRowMapper;
 import com.CSCI32006.CLI.SetupDatabase;
 import com.CSCI32006.CLI.Users.UserCommands;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -333,5 +337,19 @@ public class GameCommands extends AbstractShellComponent {
             }
 
         }
+    }
+
+    @Command(command = "game recommend", description = "Recommend a game")
+    private void gameRecommend() throws IOException {
+        SqlParameterSource parameters = new MapSqlParameterSource("ids", SetupDatabase.getClient().getRecommend(String.valueOf(UserCommands.getUser().getUserId())).stream().map(Integer::parseInt).collect(Collectors.toList()));
+        var games = new NamedParameterJdbcTemplate(SetupDatabase.getJdbcTemplate()).query("SELECT gameid, title, esrb_rating, developername, publishername FROM game WHERE gameid IN (:ids)", parameters, new GameRowMapper());
+        var t = games.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+        t.add(SelectorItem.of("Exit", "-1"));
+        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                t, "My Top 10 Games: ", null);
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                .run(SingleItemSelector.SingleItemSelectorContext.empty());
     }
 }
