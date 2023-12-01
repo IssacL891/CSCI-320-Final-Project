@@ -14,7 +14,9 @@ import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 
+import java.io.IOException;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -119,7 +121,7 @@ public class UserCommands extends AbstractShellComponent {
         getTerminal().writer().println("Successfully logged out!");
     }
     @Command(command = "login user", description = "login to app")
-    private void login() {
+    private void login() throws IOException {
         getTerminal().writer().println("Logging in to the application");
         var username = Helper.getContextValue(false, "Username: ", "username", getTerminal(), getResourceLoader(), getTemplateExecutor());
         if(checkUserExists(username)) {
@@ -129,6 +131,7 @@ public class UserCommands extends AbstractShellComponent {
         } else {
             setupNewUser(username);
         }
+        SetupDatabase.getClient().insertUser(new io.gorse.gorse4j.User(Integer.toString(user.getUserId()), List.of(user.getEmail())));
     }
 
     private List<Game> getTop(Date startdate, Date enddate, int limit) {

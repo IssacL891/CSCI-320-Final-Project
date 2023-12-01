@@ -5,6 +5,7 @@ import com.CSCI32006.CLI.Helper;
 import com.CSCI32006.CLI.Platforms.PlatformRowMapper;
 import com.CSCI32006.CLI.SetupDatabase;
 import com.CSCI32006.CLI.Users.UserCommands;
+import io.gorse.gorse4j.Feedback;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.shell.command.annotation.Command;
 import org.springframework.shell.command.annotation.Option;
@@ -14,7 +15,13 @@ import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -139,7 +146,7 @@ public class CollectionCommands extends AbstractShellComponent {
     }
 
     @Command(command = "collection add game", description = "adds a game to a collection through an interactive menu")
-    private void addGameToCollection() {
+    private void addGameToCollection() throws IOException {
         //TODO Check if game already added
         var collectionId = getCollection("Select collection to add to");
         if(collectionId == -1) return;
@@ -155,11 +162,12 @@ public class CollectionCommands extends AbstractShellComponent {
         } catch (EmptyResultDataAccessException e) {
             getTerminal().writer().println("You do not own the platform the game is on.");
         }
-
         SetupDatabase.getJdbcTemplate().update(
                 "INSERT INTO game_in_collection (gameid, collectionid) VALUES(?, ?)", gameId, collectionId
         );
         getTerminal().writer().println("Successfully added game!");
+        Date date = Date.valueOf(LocalDate.now(ZoneId.of("America/New_York")));
+        SetupDatabase.getClient().insertFeedback(List.of(new Feedback("Game in collection", String.valueOf(UserCommands.getUser().getUserId()), String.valueOf(gameId), date.toString())));
     }
     @Command(command = "collection delete game", description = "delete a game from a collection through an interactive menu")
     private void deleteGameFromCollection() {
@@ -183,22 +191,29 @@ public class CollectionCommands extends AbstractShellComponent {
     }
 
     @Command(command = "game rate", description = "Rates a game")
-    private void gameRate() {
+    private void gameRate() throws IOException {
         var collectionId = getCollection("List of collections");
         if(collectionId == -1) return;
         var t = getGameFromCollection("List of games in collection " + getCollectionName(collectionId), collectionId);
         if(t == -1) return;
         var x = Double.valueOf(Helper.getContextValue(false, "What do you rate this game?", "0", getTerminal(), getResourceLoader(), getTemplateExecutor()));
+        Date date = Date.valueOf(LocalDate.now(ZoneId.of("America/New_York")));
         SetupDatabase.getJdbcTemplate().update(
-                "INSERT INTO user_star_game (userid, starrating, gameid)\n" +
-                        "VALUES (?, ?, ?)\n" +
+                "INSERT INTO user_star_game (timestamp, userid, starrating, gameid)\n" +
+                        "VALUES (?, ?, ?, ?)\n" +
                         "ON CONFLICT ON CONSTRAINT user_star_game_pk DO UPDATE\n" +
-                        "    SET starrating = excluded.starrating", UserCommands.getUser().getUserId(), x, t);
+                        "    SET starrating = excluded.starrating", date, UserCommands.getUser().getUserId(), x, t);
         getTerminal().writer().println("Successfully updated " + getGameName(t) + "'s rating to " + x);
+        if(x >= 3) {
+            SetupDatabase.getClient().insertFeedback(List.of(new Feedback("User stars game 3 and above", String.valueOf(UserCommands.getUser().getUserId()), String.valueOf(t), date.toString())));
+        } else {
+            SetupDatabase.getClient().insertFeedback(List.of(new Feedback("User stars game below 3", String.valueOf(UserCommands.getUser().getUserId()), String.valueOf(t), date.toString())));
+
+        }
     }
 
     @Command(command = "play game", description = "Play a game. -(r)andom to play a random game.")
-    private void playGame(@Option(shortNames = 'r') boolean random) {
+    private void playGame(@Option(shortNames = 'r') boolean random) throws IOException {
         String name;
         int id = -1;
         if(random) {
@@ -230,6 +245,7 @@ public class CollectionCommands extends AbstractShellComponent {
                 "INSERT INTO user_played_game (date, userid, gameid, hour, minutes) VALUES(?, ?, ?, ?, ?);"
                     , date, UserCommands.getUser().getUserId(), id, Integer.parseInt(t[0]), Integer.parseInt(t[1]));
         getTerminal().writer().println("Successfully added playtime!");
+        SetupDatabase.getClient().insertFeedback(List.of(new Feedback("User played game", String.valueOf(UserCommands.getUser().getUserId()), String.valueOf(id), date.toString())));
     }
 
     @Command(command = "get platform", description = "Buy a platform.")
