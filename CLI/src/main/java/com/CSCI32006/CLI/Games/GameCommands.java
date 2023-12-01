@@ -9,13 +9,19 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.shell.command.annotation.Command;
+import org.springframework.shell.command.annotation.Option;
 import org.springframework.shell.component.SingleItemSelector;
 import org.springframework.shell.component.support.SelectorItem;
 import org.springframework.shell.context.InteractionMode;
 import org.springframework.shell.standard.AbstractShellComponent;
 
 import java.io.IOException;
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -347,6 +353,61 @@ public class GameCommands extends AbstractShellComponent {
         t.add(SelectorItem.of("Exit", "-1"));
         SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
                 t, "My Top 10 Games: ", null);
+        component.setResourceLoader(getResourceLoader());
+        component.setTemplateExecutor(getTemplateExecutor());
+        SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                .run(SingleItemSelector.SingleItemSelectorContext.empty());
+    }
+
+    @Command(command = "game top", description = "Gets top games this month or last 90 days")
+    private void getTop(@Option(shortNames = 'm') boolean month) {
+        if(month) {
+            var a = SetupDatabase.getJdbcTemplate().query("SELECT g.gameid, title, esrb_rating, developername, publishername\n" +
+                    "FROM user_star_game usg JOIN p320_06.game g on usg.gameid = g.gameid\n" +
+                    "WHERE timestamp >= date_trunc('month', current_timestamp AT TIME ZONE 'EST') AND timestamp < date_trunc('month', current_timestamp AT TIME ZONE 'EST') + interval '1 month'\n" +
+                    "GROUP BY g.gameid, g.gameid, title, esrb_rating, developername, publishername, timestamp order by (count(starrating) * avg(starrating) + get_x_percentile_rating(0.25, NULL, NULL) * get_avg_rating(NULL, NULL)) / (count(starrating) + get_avg_rating(NULL, NULL)) DESC LIMIT 5;", new GameRowMapper());
+
+            var t = a.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+            t.add(SelectorItem.of("Exit", "-1"));
+            SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                    t, "Top 5 Games of " + LocalDate.now(ZoneId.of("America/New_York")).getMonth() + ": ", null);
+            component.setResourceLoader(getResourceLoader());
+            component.setTemplateExecutor(getTemplateExecutor());
+            SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                    .run(SingleItemSelector.SingleItemSelectorContext.empty());
+        } else {
+            var a = SetupDatabase.getJdbcTemplate().query("SELECT g.gameid, title, esrb_rating, developername, publishername\n" +
+                    "FROM user_star_game usg JOIN p320_06.game g on usg.gameid = g.gameid\n" +
+                    "WHERE timestamp > current_timestamp AT TIME ZONE 'EST' - interval '90 days'\n" +
+                    "GROUP BY g.gameid, g.gameid, title, esrb_rating, developername, publishername, timestamp order by (count(starrating) * avg(starrating) + get_x_percentile_rating(0.25, NULL, NULL) * get_avg_rating(NULL, NULL)) / (count(starrating) + get_avg_rating(NULL, NULL)) DESC LIMIT 20;", new GameRowMapper());
+
+            var t = a.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+            t.add(SelectorItem.of("Exit", "-1"));
+            SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                    t, "Top 20 Games of Last 90 Days: ", null);
+            component.setResourceLoader(getResourceLoader());
+            component.setTemplateExecutor(getTemplateExecutor());
+            SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
+                    .run(SingleItemSelector.SingleItemSelectorContext.empty());
+        }
+
+    }
+
+    @Command(command = "game top followers", description = "Gets top 20 game among your followers")
+    private void getTopFollowers() {
+        var a = SetupDatabase.getJdbcTemplate().query("SELECT values.gameid, title, esrb_rating, developername, publishername\n" +
+                "    FROM (SELECT gameid, 1 AS weight, date FROM user_played_game UNION SELECT gameid, 0.7 AS weight, timestamp FROM game_in_collection) AS values\n" +
+                "                           JOIN (SELECT gameid, (count(starrating) * avg(starrating) + get_x_percentile_rating(0.25, NULL, NULL) * get_avg_rating(NULL, NULL)) / (count(starrating) + get_x_percentile_rating(0.25, NULL, NULL)) as top FROM user_star_game GROUP BY gameid) AS t\n" +
+                "                                ON values.gameid = t.gameid\n" +
+                "                  JOIN game AS g ON t.gameid = g.gameid\n" +
+                "WHERE values.gameid IN (SELECT gic.gameid FROM followers AS f JOIN collection as c ON f.useridfollow = c.userid JOIN p320_06.game_in_collection gic on c.collectionid = gic.collectionid WHERE useridown = ?)\n" +
+                "GROUP BY values.gameid, title, esrb_rating, developername, publishername, t.top order by ((avg(sum(weight)) over ()) + top * count(weight) + get_x_percentile_weight(0.25) * get_avg_weight())\n" +
+                "    / (count(weight) + get_x_percentile_weight(0.25)) DESC LIMIT 20;", new GameRowMapper(), UserCommands.getUser().getUserId());
+
+        var t = a.stream().map((game -> SelectorItem.of(game.toString(), String.valueOf(game.getGameId())))).collect(Collectors.toList());
+        t.add(SelectorItem.of("Exit", "-1"));
+        SingleItemSelector<String, SelectorItem<String>> component = new SingleItemSelector<>(getTerminal(),
+                t, "Top 20 Games of Your Followers: ", null);
         component.setResourceLoader(getResourceLoader());
         component.setTemplateExecutor(getTemplateExecutor());
         SingleItemSelector.SingleItemSelectorContext<String, SelectorItem<String>> context = component
